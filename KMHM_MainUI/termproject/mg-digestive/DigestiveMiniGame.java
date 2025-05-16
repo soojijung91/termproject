@@ -1,12 +1,9 @@
 import java.awt.*;
 import java.awt.font.GlyphVector;
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
-import javax.imageio.ImageIO;
 import javax.swing.*;
 
 public class DigestiveMiniGame extends JFrame {
@@ -36,10 +33,12 @@ public class DigestiveMiniGame extends JFrame {
         setDefaultCloseOperation(EXIT_ON_CLOSE);
 
         try {
-            backgroundImage = ImageIO.read(new File("Frame.png"));
-        } catch (IOException e) {
-            JOptionPane.showMessageDialog(this, "배경 이미지를 불러올 수 없습니다.");
-            System.exit(1);
+            ImageIcon bgIcon = new ImageIcon(getClass().getResource("Frame.png"));
+            backgroundImage = bgIcon.getImage();
+        } catch (Exception e) {
+        // 이미지 로드 실패 시 콘솔에만 출력하고 종료
+        e.printStackTrace();
+        System.exit(1);
         }
 
         BackgroundPanel backgroundPanel = new BackgroundPanel();
