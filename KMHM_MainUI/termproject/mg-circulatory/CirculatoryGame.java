@@ -25,16 +25,16 @@ class GamePanel extends JPanel implements ActionListener, KeyListener {
     private Timer countdownTimer;
     private int timeLeft = 20;
 
-    private Image heartImage = new ImageIcon("heart.png").getImage();
-    private Image obstacle1 = new ImageIcon("erythrocyte.png").getImage();
-    private Image obstacle2 = new ImageIcon("leukocyte.png").getImage();
-    private Image background = new ImageIcon("Frame.png").getImage();
+    private Image heartImage = new ImageIcon(getClass().getResource("heart.png")).getImage();
+    private Image obstacle1 = new ImageIcon(getClass().getResource("erythrocyte.png")).getImage();
+    private Image obstacle2 = new ImageIcon(getClass().getResource("leukocyte.png")).getImage();
+    private Image background = new ImageIcon(getClass().getResource("Frame.png")).getImage();
 
     private final int GAUGE_WIDTH = 300;
     private final int GAUGE_HEIGHT = 20;
     private final int GAUGE_Y = 650;
 
-    private final int MOVE_ZONE_WIDTH = (int)(GAUGE_WIDTH * 2.5); // 750
+    private final int MOVE_ZONE_WIDTH = (int) (GAUGE_WIDTH * 2.5); // 750
     private final int PLAYER_WIDTH = 40;
     private final int PLAYER_HEIGHT = 40;
 
@@ -55,8 +55,10 @@ class GamePanel extends JPanel implements ActionListener, KeyListener {
         gameTimer = new Timer(20, this);
         countdownTimer = new Timer(1000, e -> {
             timeLeft--;
-            if (obstacleSpeed < 15) obstacleSpeed++;
-            if (spawnRate < 0.07) spawnRate += 0.005;
+            if (obstacleSpeed < 15)
+                obstacleSpeed++;
+            if (spawnRate < 0.07)
+                spawnRate += 0.005;
 
             if (timeLeft <= 0) {
                 gameTimer.stop();
@@ -103,17 +105,16 @@ class GamePanel extends JPanel implements ActionListener, KeyListener {
         super.paintComponent(g);
 
         int centerX = getWidth() / 2;
-        
 
-    // 배경
+        // 배경
         g.drawImage(background, 0, 0, getWidth(), getHeight(), this);
 
-    // ⏳ 시간 게이지
+        // ⏳ 시간 게이지
         int gaugeX = centerX - GAUGE_WIDTH / 2;
         g.setColor(Color.DARK_GRAY);
         g.fillRect(gaugeX, GAUGE_Y, GAUGE_WIDTH, GAUGE_HEIGHT);
 
-        int fillWidth = (int)(GAUGE_WIDTH * (timeLeft / 20.0));
+        int fillWidth = (int) (GAUGE_WIDTH * (timeLeft / 20.0));
         g.setColor(Color.RED);
         g.fillRect(gaugeX, GAUGE_Y, fillWidth, GAUGE_HEIGHT);
 
@@ -136,7 +137,6 @@ class GamePanel extends JPanel implements ActionListener, KeyListener {
             g.drawImage(obs.image, obs.x, obs.y, 40, 40, this);
         }
     }
-    
 
     @Override
     public void keyPressed(KeyEvent e) {
@@ -151,8 +151,13 @@ class GamePanel extends JPanel implements ActionListener, KeyListener {
         }
     }
 
-    @Override public void keyReleased(KeyEvent e) {}
-    @Override public void keyTyped(KeyEvent e) {}
+    @Override
+    public void keyReleased(KeyEvent e) {
+    }
+
+    @Override
+    public void keyTyped(KeyEvent e) {
+    }
 }
 
 class Obstacle {
