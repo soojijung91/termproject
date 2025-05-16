@@ -36,7 +36,6 @@ public class DigestiveMiniGame extends JFrame {
             ImageIcon bgIcon = new ImageIcon(getClass().getResource("Frame.png"));
             backgroundImage = bgIcon.getImage();
         } catch (Exception e) {
-        // 이미지 로드 실패 시 콘솔에만 출력하고 종료
         e.printStackTrace();
         System.exit(1);
         }
