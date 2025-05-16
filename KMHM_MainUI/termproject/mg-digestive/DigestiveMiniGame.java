@@ -1,12 +1,4 @@
-import java.awt.BasicStroke;
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.FontMetrics;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.Image;
-import java.awt.RenderingHints;
-import java.awt.Shape;
+import java.awt.*;
 import java.awt.font.GlyphVector;
 import java.io.File;
 import java.io.IOException;
@@ -22,12 +14,13 @@ public class DigestiveMiniGame extends JFrame {
     private final List<FoodItem> foodList = new ArrayList<>();
     private final List<FoodItem> gameList = new ArrayList<>();
     private final OutlinedLabel foodLabel = new OutlinedLabel("");
-    private final JLabel scoreLabel = new JLabel("0 / 10", SwingConstants.RIGHT);
+    private final JLabel scoreLabel = new JLabel("0 / 5", SwingConstants.RIGHT);
     private final JButton healthyButton = new JButton("Healthy Food");
     private final JButton unhealthyButton = new JButton("Unhealthy Food");
     private final JProgressBar timerBar = new JProgressBar();
     private javax.swing.Timer countdownTimer;
     private int currentIndex = 0;
+    private int correctCount = 0;
     private final Random random = new Random();
     private Image backgroundImage;
     private boolean whiteText = true;
@@ -54,7 +47,7 @@ public class DigestiveMiniGame extends JFrame {
         setContentPane(backgroundPanel);
 
         timerBar.setMaximum(TIME_LIMIT);
-        timerBar.setForeground(Color.RED); 
+        timerBar.setForeground(Color.RED);
         timerBar.setBounds(100, 20, 1240, 25);
         backgroundPanel.add(timerBar);
 
@@ -92,7 +85,7 @@ public class DigestiveMiniGame extends JFrame {
         unhealthyButton.addActionListener(e -> checkAnswer(false));
 
         loadFoodItems();
-        selectRandom10();
+        selectRandomItems(10);
         showNext();
     }
 
@@ -109,34 +102,32 @@ public class DigestiveMiniGame extends JFrame {
         for (String food : unhealthyFoods) foodList.add(new FoodItem(food, false));
     }
 
-    private void selectRandom10() {
+    private void selectRandomItems(int count) {
         Collections.shuffle(foodList);
         List<FoodItem> tempList = new ArrayList<>(foodList);
-
-        int healthyCount = 0, unhealthyCount = 0;
         gameList.clear();
 
-        while (!tempList.isEmpty() && gameList.size() < 10) {
+        int healthyCount = 0, unhealthyCount = 0;
+
+        while (!tempList.isEmpty() && gameList.size() < count) {
             FoodItem item = tempList.remove(0);
-            if (item.isHealthy && healthyCount < 7) {
+            if (item.isHealthy && healthyCount < count) {
                 gameList.add(item);
                 healthyCount++;
-            } else if (!item.isHealthy && unhealthyCount < 7) {
+            } else if (!item.isHealthy && unhealthyCount < count) {
                 gameList.add(item);
                 unhealthyCount++;
-            } else if (gameList.size() >= 7) {
-                gameList.add(item);
             }
         }
 
         long good = gameList.stream().filter(f -> f.isHealthy).count();
-        if (good == 0 || good == 10) selectRandom10();
+        if (good == 0 || good == count) selectRandomItems(count);
     }
 
     private void showNext() {
         if (currentIndex >= gameList.size()) {
             if (countdownTimer != null) countdownTimer.stop();
-            JOptionPane.showMessageDialog(this, "🎉 게임 클리어!");
+            JOptionPane.showMessageDialog(this, "🎉 게임 종료!");
             System.exit(0);
         }
 
@@ -144,7 +135,7 @@ public class DigestiveMiniGame extends JFrame {
         whiteText = new Random().nextBoolean();
         foodLabel.setText(item.name);
         foodLabel.setColors(whiteText ? Color.WHITE : Color.BLACK, whiteText ? Color.BLACK : Color.WHITE);
-        scoreLabel.setText(currentIndex + "개 / 10개");
+        scoreLabel.setText(correctCount + "개 / 5개");
         startTimer();
     }
 
@@ -168,11 +159,19 @@ public class DigestiveMiniGame extends JFrame {
     private void checkAnswer(boolean userChoice) {
         FoodItem item = gameList.get(currentIndex);
         if (item.isHealthy == userChoice) {
+            correctCount++;
             currentIndex++;
-            showNext();
+
+            if (correctCount >= 5) {
+                if (countdownTimer != null) countdownTimer.stop();
+                JOptionPane.showMessageDialog(this, "Success!");
+                System.exit(0);
+            } else {
+                showNext();
+            }
         } else {
-            countdownTimer.stop();
-            gameOver("❌ 오답입니다!");
+            if (countdownTimer != null) countdownTimer.stop();
+            gameOver("❌ Incorrect");
         }
     }
 
@@ -184,6 +183,7 @@ public class DigestiveMiniGame extends JFrame {
     private static class FoodItem {
         String name;
         boolean isHealthy;
+
         FoodItem(String name, boolean isHealthy) {
             this.name = name;
             this.isHealthy = isHealthy;
@@ -229,7 +229,7 @@ public class DigestiveMiniGame extends JFrame {
             Shape textShape = gv.getOutline(x, y);
 
             g2.setColor(strokeColor);
-            g2.setStroke(new BasicStroke(10f)); // 테두리 두께 조절
+            g2.setStroke(new BasicStroke(10f));
             g2.draw(textShape);
 
             g2.setColor(fillColor);
