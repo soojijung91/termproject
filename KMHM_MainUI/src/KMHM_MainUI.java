@@ -36,18 +36,18 @@ public class KMHM_MainUI extends JFrame {
         setLayout(null);
 
         // 이미지 로딩
-        bgImg = new ImageIcon("src/img/UI Background.png").getImage();
-        humanImg = new ImageIcon("src/img/3D Illustration.png").getImage();
-        scanningImg = new ImageIcon("src/img/_Scanning_.png").getImage();
-        timerImg = new ImageIcon("src/img/Game Timer.png").getImage();
-        groupImg = new ImageIcon("src/img/Group.png").getImage();
-        rightImg = new ImageIcon("src/img/Right Components.png").getImage();
-        stopImg = new ImageIcon("src/img/CTA.png").getImage();
-        lungRaw = new ImageIcon("src/img/폐 이미지.png").getImage();
-        brainRaw = new ImageIcon("src/img/신경계 이미지.png").getImage();
-        digestiveRaw = new ImageIcon("src/img/소화계 이미지.png").getImage();
-        pulseRateImg = new ImageIcon("src/img/Pulse Rate.png").getImage();
-        pulseGroupImg = new ImageIcon("src/img/Group-1.png").getImage();
+        bgImg = new ImageIcon(getClass().getResource("/img/UI Background.png")).getImage();
+        humanImg = new ImageIcon(getClass().getResource("/img/3D Illustration.png")).getImage();
+        scanningImg = new ImageIcon(getClass().getResource("/img/_Scanning_.png")).getImage();
+        timerImg = new ImageIcon(getClass().getResource("/img/Game Timer.png")).getImage();
+        groupImg = new ImageIcon(getClass().getResource("/img/Group.png")).getImage();
+        rightImg = new ImageIcon(getClass().getResource("/img/Right Components.png")).getImage();
+        stopImg = new ImageIcon(getClass().getResource("/img/CTA.png")).getImage();
+        lungRaw = new ImageIcon(getClass().getResource("/img/폐 이미지.png")).getImage();
+        brainRaw = new ImageIcon(getClass().getResource("/img/신경계 이미지.png")).getImage();
+        digestiveRaw = new ImageIcon(getClass().getResource("/img/소화계 이미지.png")).getImage();
+        pulseRateImg = new ImageIcon(getClass().getResource("/img/Pulse Rate.png")).getImage();
+        pulseGroupImg = new ImageIcon(getClass().getResource("/img/Group-1.png")).getImage();
 
         background = new JLabel();
         human = new JLabel();
@@ -67,10 +67,10 @@ public class KMHM_MainUI extends JFrame {
         centerClockLabel.setOpaque(false);
 
         try {
-            Font digitalFont = Font.createFont(Font.TRUETYPE_FONT, new File("src/fonts/digital-7.ttf")).deriveFont(40f);
+            Font digitalFont = Font.createFont(Font.TRUETYPE_FONT, new File("src/fonts/digital-7.ttf")).deriveFont(36f);
             centerClockLabel.setFont(digitalFont);
         } catch (FontFormatException | IOException e) {
-            centerClockLabel.setFont(new Font("Dialog", Font.BOLD, 40));
+            centerClockLabel.setFont(new Font("Dialog", Font.BOLD, 33));
             System.err.println("폰트를 불러오는 데 실패했습니다: " + e.getMessage());
         }
 
