@@ -1,8 +1,6 @@
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.io.File;
-import java.io.IOException;
 import java.util.LinkedList;
 import java.util.Random;
 
@@ -65,14 +63,6 @@ public class KMHM_MainUI extends JFrame {
         centerClockLabel = new JLabel("00:00", SwingConstants.CENTER);
         centerClockLabel.setForeground(Color.GREEN);
         centerClockLabel.setOpaque(false);
-
-        try {
-            Font digitalFont = Font.createFont(Font.TRUETYPE_FONT, new File("src/fonts/digital-7.ttf")).deriveFont(36f);
-            centerClockLabel.setFont(digitalFont);
-        } catch (FontFormatException | IOException e) {
-            centerClockLabel.setFont(new Font("Dialog", Font.BOLD, 33));
-            System.err.println("폰트를 불러오는 데 실패했습니다: " + e.getMessage());
-        }
 
         add(centerClockLabel);
         add(pulseRateLabel);
