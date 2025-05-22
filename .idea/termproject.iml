@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module type="JAVA_MODULE" version="4">
+  <component name="NewModuleRootManager" inherit-compiler-output="true">
+    <exclude-output />
+    <content url="file://$MODULE_DIR$">
+      <sourceFolder url="file://$MODULE_DIR$/KMHM_MainUI" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/KMHM_MainUI/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/KMHM_MainUI/src/fonts" type="java-resource" />
+      <sourceFolder url="file://$MODULE_DIR$/KMHM_MainUI/src/img" type="java-resource" />
+      <sourceFolder url="file://$MODULE_DIR$/KMHM_MainUI/termproject" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/KMHM_MainUI/termproject/mg--nervous/src/assets" type="java-resource" />
+      <sourceFolder url="file://$MODULE_DIR$/KMHM_MainUI/termproject/mg-circulatory/asset" type="java-resource" />
+      <sourceFolder url="file://$MODULE_DIR$/KMHM_MainUI/termproject/mg-digestive/asset" type="java-resource" />
+      <sourceFolder url="file://$MODULE_DIR$/KMHM_MainUI/termproject/mg-respiratory/asset" type="java-resource" />
+      <sourceFolder url="file://$MODULE_DIR$/production/termproject/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/production/termproject/termproject/mg--nervous/src/assets" type="java-resource" />
+      <sourceFolder url="file://$MODULE_DIR$/KMHM_MainUI/termproject/mg--nervous/src" isTestSource="false" />
+    </content>
+    <orderEntry type="inheritedJdk" />
+    <orderEntry type="sourceFolder" forTests="false" />
+  </component>
+</module>
