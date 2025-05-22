@@ -1,6 +1,7 @@
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.LinkedList;
@@ -35,7 +36,6 @@ public class KMHM_MainUI extends JFrame {
         setLocationRelativeTo(null);
         setLayout(null);
 
-        // 이미지 로딩
         bgImg = new ImageIcon(getClass().getResource("/img/UI Background.png")).getImage();
         humanImg = new ImageIcon(getClass().getResource("/img/3D Illustration.png")).getImage();
         scanningImg = new ImageIcon(getClass().getResource("/img/_Scanning_.png")).getImage();
@@ -65,7 +65,6 @@ public class KMHM_MainUI extends JFrame {
         centerClockLabel = new JLabel("00:00", SwingConstants.CENTER);
         centerClockLabel.setForeground(Color.GREEN);
         centerClockLabel.setOpaque(false);
-
         try {
             Font digitalFont = Font.createFont(Font.TRUETYPE_FONT, new File("src/fonts/digital-7.ttf")).deriveFont(36f);
             centerClockLabel.setFont(digitalFont);
@@ -77,15 +76,14 @@ public class KMHM_MainUI extends JFrame {
         add(centerClockLabel);
         add(pulseRateLabel);
         add(pulseGroupIcon);
-
         for (int i = 0; i < 4; i++) {
             nameLabels[i] = new JLabel(systemNames[i]);
-            nameLabels[i].setFont(new Font("Arial", Font.BOLD, 14));
+            nameLabels[i].setFont(new Font("맑은 고딕", Font.BOLD, 14));
             nameLabels[i].setForeground(systemColors[i]);
             add(nameLabels[i]);
 
             percentLabels[i] = new JLabel("0%");
-            percentLabels[i].setFont(new Font("Arial", Font.BOLD, 13));
+            percentLabels[i].setFont(new Font("맑은 고딕", Font.BOLD, 13));
             percentLabels[i].setForeground(systemColors[i]);
             add(percentLabels[i]);
 
@@ -94,7 +92,7 @@ public class KMHM_MainUI extends JFrame {
             bars[i].setForeground(systemColors[i]);
             bars[i].setBackground(Color.LIGHT_GRAY);
             bars[i].setStringPainted(true);
-            bars[i].setFont(new Font("Arial", Font.BOLD, 13));
+            bars[i].setFont(new Font("맑은 고딕", Font.BOLD, 13));
             add(bars[i]);
         }
 
@@ -173,7 +171,6 @@ public class KMHM_MainUI extends JFrame {
         setVisible(true);
         resizeComponents();
     }
-
     private void increase(int index) {
         int val = bars[index].getValue();
         val = Math.min(100, val + 3);
@@ -200,20 +197,21 @@ public class KMHM_MainUI extends JFrame {
         }
 
         background.setBounds(0, 0, w, h);
-        background.setIcon(new ImageIcon(bgImg.getScaledInstance(w, h, Image.SCALE_SMOOTH)));
+        background.setIcon(new ImageIcon(getHighQualityScaledImage(bgImg, w, h)));
 
         int humanW = (int) (w * 0.43);
         int humanH = (int) (h * 0.85);
         int humanX = (w - humanW) / 2;
         int humanY = (int) (h * 0.08);
         human.setBounds(humanX, humanY, humanW, humanH);
-        human.setIcon(new ImageIcon(humanImg.getScaledInstance(humanW, humanH, Image.SCALE_SMOOTH)));
+        human.setIcon(new ImageIcon(getHighQualityScaledImage(humanImg, humanW, humanH)));
 
         int lungW = (int) (humanW * 0.23);
         int lungH = (int) (humanH * 0.15);
         int lungX = humanX + (humanW - lungW) / 2;
         int lungY = humanY + (int) (humanH * 0.26);
         lungImg.setBounds(lungX, lungY - 80, lungW, lungH);
+// 기본 스케일 방식 사용
         lungImg.setIcon(new ImageIcon(lungRaw.getScaledInstance(lungW, lungH, Image.SCALE_SMOOTH)));
         lungArea = new Rectangle(lungX - humanX, lungY - 80 - humanY, lungW, lungH);
 
@@ -222,6 +220,7 @@ public class KMHM_MainUI extends JFrame {
         int brainX = humanX + (humanW - brainW) / 2;
         int brainY = humanY - (int) (brainH * 0.025);
         brainImg.setBounds(brainX, brainY + 30, brainW, brainH);
+// 기본 스케일 방식 사용
         brainImg.setIcon(new ImageIcon(brainRaw.getScaledInstance(brainW, brainH, Image.SCALE_SMOOTH)));
         brainArea = new Rectangle(brainX - humanX, brainY + 30 - humanY, brainW, brainH);
 
@@ -230,6 +229,7 @@ public class KMHM_MainUI extends JFrame {
         int digX = humanX + (humanW - digW) / 2;
         int digY = humanY + (int) (humanH * 0.25);
         digestiveImg.setBounds(digX, digY, digW, digH);
+// 기본 스케일 방식 사용
         digestiveImg.setIcon(new ImageIcon(digestiveRaw.getScaledInstance(digW, digH, Image.SCALE_SMOOTH)));
         digArea = new Rectangle(digX - humanX, digY - humanY, digW, digH);
 
@@ -238,44 +238,53 @@ public class KMHM_MainUI extends JFrame {
         int timerX = (int) (w * 0.76);
         int timerY = (int) (h * 0.06);
         gameTimer.setBounds(timerX, timerY, timerW, timerH);
-        gameTimer.setIcon(new ImageIcon(timerImg.getScaledInstance(timerW, timerH, Image.SCALE_SMOOTH)));
+        gameTimer.setIcon(new ImageIcon(getHighQualityScaledImage(timerImg, timerW, timerH)));
 
         int groupSize = (int) (timerH * 1.1);
         groupWave.setBounds(timerX + timerW + 15, timerY + 1, groupSize, groupSize);
-        groupWave.setIcon(new ImageIcon(groupImg.getScaledInstance(groupSize, groupSize, Image.SCALE_SMOOTH)));
+        groupWave.setIcon(new ImageIcon(getHighQualityScaledImage(groupImg, groupSize, groupSize)));
 
         int rightSize = (int) (w * 0.25);
         int rightX = timerX;
         int rightY = timerY + timerH + 10;
         rightComponents.setBounds(rightX - 20, rightY, rightSize, rightSize);
-        rightComponents.setIcon(new ImageIcon(rightImg.getScaledInstance(rightSize, rightSize, Image.SCALE_SMOOTH)));
+        rightComponents.setIcon(new ImageIcon(getHighQualityScaledImage(rightImg, rightSize, rightSize)));
 
         int timeW = rightSize;
         int timeH = 30;
         int timeX = rightX - 21;
         int timeY = rightY + (rightSize - timeH) / 2;
-        centerClockLabel.setBounds(timeX - 5, timeY - 5, timeW, timeH); // 위치 약간 수정 가능
+        centerClockLabel.setBounds(timeX - 5, timeY - 5, timeW, timeH);
 
         int pulseW = timerW;
         int pulseH = timerH;
         int pulseX = rightX;
         int pulseY = rightY + rightSize + 5;
         pulseRateLabel.setBounds(pulseX, pulseY, pulseW, pulseH);
-        pulseRateLabel.setIcon(new ImageIcon(pulseRateImg.getScaledInstance(pulseW, pulseH, Image.SCALE_SMOOTH)));
+        pulseRateLabel.setIcon(new ImageIcon(getHighQualityScaledImage(pulseRateImg, pulseW, pulseH)));
         pulseGroupIcon.setBounds(pulseX + pulseW + 10, pulseY + 1, groupSize, groupSize);
-        pulseGroupIcon
-                .setIcon(new ImageIcon(pulseGroupImg.getScaledInstance(groupSize, groupSize, Image.SCALE_SMOOTH)));
+        pulseGroupIcon.setIcon(new ImageIcon(getHighQualityScaledImage(pulseGroupImg, groupSize, groupSize)));
 
         ecgPanel.setBounds(pulseX, pulseY + pulseH + 5, rightSize, 80);
 
         int stopW = 140;
         int stopH = 60;
         stopBtn.setBounds(w - stopW - 30, h - stopH - 40, stopW, stopH);
-        stopBtn.setIcon(new ImageIcon(stopImg.getScaledInstance(stopW, stopH, Image.SCALE_SMOOTH)));
+        stopBtn.setIcon(new ImageIcon(getHighQualityScaledImage(stopImg, stopW, stopH)));
 
         scanning.setBounds((w - (int) (w * 0.17)) / 2 + 15, (int) (h * 0.03), (int) (w * 0.17), (int) (h * 0.05));
-        scanning.setIcon(
-                new ImageIcon(scanningImg.getScaledInstance((int) (w * 0.17), (int) (h * 0.05), Image.SCALE_SMOOTH)));
+        scanning.setIcon(new ImageIcon(getHighQualityScaledImage(scanningImg, (int) (w * 0.17), (int) (h * 0.05))));
+    }
+
+    private Image getHighQualityScaledImage(Image srcImg, int w, int h) {
+        BufferedImage resizedImg = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g2 = resizedImg.createGraphics();
+        g2.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BICUBIC);
+        g2.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
+        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        g2.drawImage(srcImg, 0, 0, w, h, null);
+        g2.dispose();
+        return resizedImg;
     }
 
     class GraphPanel extends JPanel {
@@ -288,8 +297,7 @@ public class KMHM_MainUI extends JFrame {
             setOpaque(true);
             setBackground(new Color(10, 20, 30));
             timer = new Timer(30, e -> {
-                if (waveform.size() >= getWidth())
-                    waveform.removeFirst();
+                if (waveform.size() >= getWidth()) waveform.removeFirst();
                 waveform.add(generateWaveformPoint());
                 repaint();
             });
@@ -301,12 +309,9 @@ public class KMHM_MainUI extends JFrame {
             int height = getHeight();
             int base = height / 2;
             int spike = 0;
-            if (t % 90 == 0)
-                spike = -30;
-            else if (t % 150 == 0)
-                spike = 35;
-            else if (t % 200 == 0)
-                spike = -20;
+            if (t % 90 == 0) spike = -30;
+            else if (t % 150 == 0) spike = 35;
+            else if (t % 200 == 0) spike = -20;
             double sin = Math.sin(t * 0.2) * height * 0.25;
             double noise = rand.nextGaussian() * 4;
             return (int) (base + sin + noise + spike);
@@ -317,10 +322,8 @@ public class KMHM_MainUI extends JFrame {
             int width = getWidth();
             int height = getHeight();
             g.setColor(new Color(50, 65, 80));
-            for (int x = 0; x < width; x += 20)
-                g.drawLine(x, 0, x, height);
-            for (int y = 0; y < height; y += 20)
-                g.drawLine(0, y, width, y);
+            for (int x = 0; x < width; x += 20) g.drawLine(x, 0, x, height);
+            for (int y = 0; y < height; y += 20) g.drawLine(0, y, width, y);
             g.setColor(Color.GREEN);
             int prevY = waveform.size() > 0 ? waveform.get(0) : height / 2;
             for (int i = 1; i < waveform.size(); i++) {

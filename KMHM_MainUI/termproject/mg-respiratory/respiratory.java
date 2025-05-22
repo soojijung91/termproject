@@ -30,7 +30,7 @@ public class respiratory extends JPanel implements ActionListener, KeyListener {
         try {
             lungImage = ImageIO.read(getClass().getResource("/lung.png"));
             targetImage = ImageIO.read(getClass().getResource("/target.png"));
-            backgroundImage = new ImageIcon(getClass().getResource("/Frame.png")).getImage();
+            backgroundImage = new ImageIcon(getClass().getResource("/FrameF.png")).getImage();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -121,10 +121,10 @@ public class respiratory extends JPanel implements ActionListener, KeyListener {
 
         if (gaugeFull && sizeMatch) {
             gameEnded = true;
-            JOptionPane.showMessageDialog(this, "✅ Success! Lung matched perfectly!", "Success", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(this, "✅ Game Clear!", "성공", JOptionPane.INFORMATION_MESSAGE);
         } else {
             gameEnded = true;
-            JOptionPane.showMessageDialog(this, "❌ Failed! Try again.", "Failure", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "❌ Game Over!", "실패", JOptionPane.ERROR_MESSAGE);
         }
 
         System.exit(0);
@@ -134,10 +134,10 @@ public class respiratory extends JPanel implements ActionListener, KeyListener {
     public void keyTyped(KeyEvent e) {}
 
     public static void main(String[] args) {
-        JFrame frame = new JFrame("Lung Inflate Game");
+        JFrame frame = new JFrame("호흡계 미니게임");
         respiratory gamePanel = new respiratory();
         frame.add(gamePanel);
-        frame.setSize(800, 600);
+        frame.setSize(1024, 768);
         frame.setLocationRelativeTo(null);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setVisible(true);

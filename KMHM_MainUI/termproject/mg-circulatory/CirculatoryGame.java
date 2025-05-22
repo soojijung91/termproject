@@ -6,11 +6,11 @@ import javax.swing.*;
 
 public class CirculatoryGame extends JFrame {
     public CirculatoryGame() {
-        setTitle("순환계 미니게임 - 장애물 피하기");
+        setTitle("순환계 미니게임");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(1080, 768);
         setLocationRelativeTo(null);
-        setResizable(false);
+        setResizable(true); // 창 크기 조절 허용
         add(new GamePanel());
         setVisible(true);
     }
@@ -28,18 +28,19 @@ class GamePanel extends JPanel implements ActionListener, KeyListener {
     private Image heartImage = new ImageIcon(getClass().getResource("heart.png")).getImage();
     private Image obstacle1 = new ImageIcon(getClass().getResource("erythrocyte.png")).getImage();
     private Image obstacle2 = new ImageIcon(getClass().getResource("leukocyte.png")).getImage();
-    private Image background = new ImageIcon(getClass().getResource("Frame.png")).getImage();
+    private Image background = new ImageIcon(getClass().getResource("FrameC.png")).getImage();
 
     private final int GAUGE_WIDTH = 300;
     private final int GAUGE_HEIGHT = 20;
-    private final int GAUGE_Y = 650;
 
-    private final int MOVE_ZONE_WIDTH = (int) (GAUGE_WIDTH * 2.5); // 750
-    private final int PLAYER_WIDTH = 40;
-    private final int PLAYER_HEIGHT = 40;
+    private final double MOVE_ZONE_SCALE = 2.5;
+    private int moveZoneWidth;
+    private int gaugeY;
 
     private int playerX;
-    private final int playerY = GAUGE_Y - PLAYER_HEIGHT - 30;
+    private int playerY;
+    private int playerWidth;
+    private int playerHeight;
 
     private ArrayList<Obstacle> obstacles = new ArrayList<>();
     private int obstacleSpeed = 5;
@@ -49,8 +50,6 @@ class GamePanel extends JPanel implements ActionListener, KeyListener {
         setFocusable(true);
         setLayout(null);
         addKeyListener(this);
-
-        playerX = getWidth() / 2 - PLAYER_WIDTH / 2; // 초기값은 중앙
 
         gameTimer = new Timer(20, this);
         countdownTimer = new Timer(1000, e -> {
@@ -63,7 +62,8 @@ class GamePanel extends JPanel implements ActionListener, KeyListener {
             if (timeLeft <= 0) {
                 gameTimer.stop();
                 countdownTimer.stop();
-                JOptionPane.showMessageDialog(this, "Game Clear!");
+                JOptionPane.showMessageDialog(this, "✅ Game Clear!");
+                System.exit(0); // 게임 클리어 후 자동 종료
             }
         });
 
@@ -72,12 +72,43 @@ class GamePanel extends JPanel implements ActionListener, KeyListener {
     }
 
     @Override
+    public void addNotify() {
+        super.addNotify();
+        updateLayout(); // 초기 위치 설정
+    }
+
+    private void updateLayout() {
+        int width = getWidth();
+        int height = getHeight();
+
+        moveZoneWidth = (int) (GAUGE_WIDTH * MOVE_ZONE_SCALE);
+        gaugeY = height - 100;
+
+        // 창 너비에 비례한 하트 크기 설정
+        playerWidth = Math.max(30, width / 27);  // 1080 / 27 ≈ 40
+        playerHeight = playerWidth;
+
+        playerY = gaugeY - playerHeight - 30;
+
+        // 초기 중앙 위치 설정 또는 화면 크기에 따라 보정
+        if (playerX == 0) {
+            playerX = width / 2 - playerWidth / 2;
+        } else {
+            int minX = width / 2 - moveZoneWidth / 2;
+            int maxX = width / 2 + moveZoneWidth / 2 - playerWidth;
+            playerX = Math.max(minX, Math.min(playerX, maxX));
+        }
+    }
+
+    @Override
     public void actionPerformed(ActionEvent e) {
+        updateLayout();
+
         for (Obstacle obs : obstacles) {
             obs.y += obstacleSpeed;
         }
 
-        Rectangle playerRect = new Rectangle(playerX + 5, playerY + 5, PLAYER_WIDTH - 10, PLAYER_HEIGHT - 10);
+        Rectangle playerRect = new Rectangle(playerX + 5, playerY + 5, playerWidth - 10, playerHeight - 10);
         Iterator<Obstacle> iterator = obstacles.iterator();
         while (iterator.hasNext()) {
             Obstacle obs = iterator.next();
@@ -85,7 +116,8 @@ class GamePanel extends JPanel implements ActionListener, KeyListener {
             if (playerRect.intersects(obsRect)) {
                 gameTimer.stop();
                 countdownTimer.stop();
-                JOptionPane.showMessageDialog(this, "Game Over!");
+                JOptionPane.showMessageDialog(this, "❌ Game Over!");
+                System.exit(0); // 게임 오버 시 자동 종료
                 return;
             }
         }
@@ -103,34 +135,32 @@ class GamePanel extends JPanel implements ActionListener, KeyListener {
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
-
         int centerX = getWidth() / 2;
 
         // 배경
         g.drawImage(background, 0, 0, getWidth(), getHeight(), this);
 
-        // ⏳ 시간 게이지
+        // 시간 게이지
         int gaugeX = centerX - GAUGE_WIDTH / 2;
         g.setColor(Color.DARK_GRAY);
-        g.fillRect(gaugeX, GAUGE_Y, GAUGE_WIDTH, GAUGE_HEIGHT);
+        g.fillRect(gaugeX, gaugeY, GAUGE_WIDTH, GAUGE_HEIGHT);
 
         int fillWidth = (int) (GAUGE_WIDTH * (timeLeft / 20.0));
-        g.setColor(Color.RED);
-        g.fillRect(gaugeX, GAUGE_Y, fillWidth, GAUGE_HEIGHT);
+        g.setColor(new Color(0, 255, 255));
+        g.fillRect(gaugeX, gaugeY, fillWidth, GAUGE_HEIGHT);
 
         g.setColor(Color.WHITE);
-        g.setFont(new Font("Arial", Font.BOLD, 14));
-        g.drawString("Time Left: " + timeLeft + "s", gaugeX, GAUGE_Y + GAUGE_HEIGHT + 16);
+        g.setFont(new Font("맑은 고딕", Font.BOLD, 14));
+        g.drawString("Time Left: " + timeLeft + "s", gaugeX, gaugeY + GAUGE_HEIGHT + 16);
 
-        // 🟫 하트 이동 가이드 바 (레일)
-        int moveZoneX = centerX - MOVE_ZONE_WIDTH / 2;
-        int guideBarY = playerY + PLAYER_HEIGHT + 5; // 하트 아래 살짝
+        // 이동 레일
+        int moveZoneX = centerX - moveZoneWidth / 2;
+        int guideBarY = playerY + playerHeight + 5;
+        g.setColor(new Color(100, 100, 100, 120));
+        g.fillRoundRect(moveZoneX, guideBarY, moveZoneWidth, 8, 10, 10);
 
-        g.setColor(new Color(100, 100, 100, 120)); // 반투명 회색
-        g.fillRoundRect(moveZoneX, guideBarY, MOVE_ZONE_WIDTH, 8, 10, 10);
-
-        // 💘 하트
-        g.drawImage(heartImage, playerX, playerY, PLAYER_WIDTH, PLAYER_HEIGHT, this);
+        // 하트
+        g.drawImage(heartImage, playerX, playerY, playerWidth, playerHeight, this);
 
         // 장애물
         for (Obstacle obs : obstacles) {
@@ -141,23 +171,17 @@ class GamePanel extends JPanel implements ActionListener, KeyListener {
     @Override
     public void keyPressed(KeyEvent e) {
         int key = e.getKeyCode();
-        int centerX = getWidth() / 2;
-        int moveZoneX = centerX - MOVE_ZONE_WIDTH / 2;
+        int moveZoneX = getWidth() / 2 - moveZoneWidth / 2;
 
         if (key == KeyEvent.VK_LEFT && playerX > moveZoneX) {
             playerX -= 10;
-        } else if (key == KeyEvent.VK_RIGHT && playerX < moveZoneX + MOVE_ZONE_WIDTH - PLAYER_WIDTH) {
+        } else if (key == KeyEvent.VK_RIGHT && playerX < moveZoneX + moveZoneWidth - playerWidth) {
             playerX += 10;
         }
     }
 
-    @Override
-    public void keyReleased(KeyEvent e) {
-    }
-
-    @Override
-    public void keyTyped(KeyEvent e) {
-    }
+    @Override public void keyReleased(KeyEvent e) {}
+    @Override public void keyTyped(KeyEvent e) {}
 }
 
 class Obstacle {
