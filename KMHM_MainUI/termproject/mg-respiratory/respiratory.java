@@ -1,9 +1,9 @@
-import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
-import javax.imageio.ImageIO;
 import java.io.IOException;
+import javax.imageio.ImageIO;
+import javax.swing.*;
 
 public class respiratory extends JPanel implements ActionListener, KeyListener {
     private double scale = 0.1;
@@ -28,9 +28,9 @@ public class respiratory extends JPanel implements ActionListener, KeyListener {
         timer.start();
 
         try {
-            lungImage = ImageIO.read(getClass().getResource("/lung.png"));
-            targetImage = ImageIO.read(getClass().getResource("/target.png"));
-            backgroundImage = new ImageIcon(getClass().getResource("/FrameF.png")).getImage();
+            lungImage = ImageIO.read(getClass().getResource("/asset/lung.png"));
+            targetImage = ImageIO.read(getClass().getResource("/asset/target.png"));
+            backgroundImage = new ImageIcon(getClass().getResource("/asset/FrameF.png")).getImage();
         } catch (IOException e) {
             e.printStackTrace();
         }
