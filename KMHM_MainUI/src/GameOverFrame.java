@@ -6,7 +6,7 @@ public class GameOverFrame extends JFrame {
 
     public GameOverFrame(String timeResult) {
         setTitle("Game Over");
-        setSize(1440, 1040);
+        setSize(1073, 768);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLayout(null);
@@ -74,10 +74,11 @@ public class GameOverFrame extends JFrame {
         btn.setBorderPainted(false);
         btn.setFocusPainted(false);
     }
+
     class BackgroundPanel extends JPanel {
         private Image backgroundImage;
 
-    // ✅ 여기 이거 추가!!
+        // ✅ 여기 이거 추가!!
         public BackgroundPanel(String path) {
             backgroundImage = new ImageIcon(getClass().getResource(path)).getImage();
         }

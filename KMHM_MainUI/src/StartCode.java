@@ -10,7 +10,7 @@ public class StartCode extends JFrame {
 
     public StartCode() {
         setTitle("Kill Me Heal Me");
-        setSize(1440, 1040);
+        setSize(1073, 768);
         setResizable(true); // ✅ 창 크기 조절 허용
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
@@ -27,7 +27,6 @@ public class StartCode extends JFrame {
         // 이미지 리소스 로드
         ImageIcon rawStart = new ImageIcon(getClass().getResource("/img/StartButton.png"));
         ImageIcon rawHowTo = new ImageIcon(getClass().getResource("/img/HowToButton.png"));
-
 
         int btnWidth = 300;
         int btnHeight = 150;
@@ -46,7 +45,7 @@ public class StartCode extends JFrame {
         // 버튼 기능
         startButton.addActionListener(e -> {
             dispose();
-            KMHM_MainUI game=new KMHM_MainUI();
+            KMHM_MainUI game = new KMHM_MainUI();
             game.setSize(getSize());
             game.setLocationRelativeTo(null);
             game.setVisible(true);
@@ -100,10 +99,8 @@ public class StartCode extends JFrame {
         }
     }
 
-
     public static void main(String[] args) {
-        
+
         SwingUtilities.invokeLater(StartCode::new);
     }
 }
-
