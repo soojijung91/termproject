@@ -1,52 +1,70 @@
 import java.awt.*;
+import java.awt.event.*;
 import javax.swing.*;
 
 public class GameOverFrame extends JFrame {
-    private JButton restartButton;
-    private JButton closeButton;
 
-    public GameOverFrame() {
+    public GameOverFrame(String timeResult) {
         setTitle("Game Over");
         setSize(1440, 1040);
         setLocationRelativeTo(null);
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLayout(null);
+        setResizable(true);
 
-        // 배경
-        JLabel background = new JLabel(new ImageIcon("StartFrame.png"));
-        background.setBounds(0, 0, 1440, 1040);
+        // ✅ 배경 이미지 패널
+        BackgroundPanel background = new BackgroundPanel("/img/GameOverImg.png");
+        background.setBounds(0, 0, getWidth(), getHeight());
         background.setLayout(null);
         add(background);
 
-        // 버튼 이미지
-        ImageIcon restartIcon = new ImageIcon("RestartButton.png");
-        ImageIcon closeIcon = new ImageIcon("CloseButton.png");
+        // ✅ 결과 라벨
+        JLabel resultLabel = new JLabel("Time: " + timeResult, SwingConstants.CENTER);
+        resultLabel.setFont(new Font("맑은 고딕", Font.BOLD, 50));
+        resultLabel.setForeground(Color.WHITE);
+        resultLabel.setBounds(400, 200, 640, 80);
+        background.add(resultLabel);
+
+        // ✅ 버튼 이미지 로드
+        ImageIcon rawRestart = new ImageIcon(getClass().getResource("/img/RestartButton.png"));
+        ImageIcon rawExit = new ImageIcon(getClass().getResource("/img/ExitButton.png"));
 
         int btnWidth = 300;
-        int btnHeight = 110;
+        int btnHeight = 150;
 
-        Image scaledRestart = restartIcon.getImage().getScaledInstance(btnWidth, btnHeight, Image.SCALE_SMOOTH);
-        Image scaledClose = closeIcon.getImage().getScaledInstance(btnWidth, btnHeight, Image.SCALE_SMOOTH);
+        Image restartImg = rawRestart.getImage().getScaledInstance(btnWidth, btnHeight, Image.SCALE_SMOOTH);
+        Image exitImg = rawExit.getImage().getScaledInstance(btnWidth, btnHeight, Image.SCALE_SMOOTH);
 
-        restartButton = new JButton(new ImageIcon(scaledRestart));
-        closeButton = new JButton(new ImageIcon(scaledClose));
+        JButton restartButton = new JButton(new ImageIcon(restartImg));
+        JButton exitButton = new JButton(new ImageIcon(exitImg));
+
         setButtonStyle(restartButton);
-        setButtonStyle(closeButton);
+        setButtonStyle(exitButton);
 
-        // 위치
         restartButton.setBounds(360, 780, btnWidth, btnHeight);
-        closeButton.setBounds(780, 780, btnWidth, btnHeight);
+        exitButton.setBounds(780, 780, btnWidth, btnHeight);
 
         background.add(restartButton);
-        background.add(closeButton);
+        background.add(exitButton);
 
-        // 기능
+        // ✅ 버튼 기능
         restartButton.addActionListener(e -> {
             dispose();
-            new KMHM_MainUI();
+            new KMHM_MainUI(); // 다시 실행
         });
 
-        closeButton.addActionListener(e -> System.exit(0));
+        exitButton.addActionListener(e -> System.exit(0));
+
+        // 리사이징 대응
+        addComponentListener(new ComponentAdapter() {
+            public void componentResized(ComponentEvent e) {
+                background.setBounds(0, 0, getWidth(), getHeight());
+                int w = getWidth(), h = getHeight();
+                resultLabel.setBounds(w / 2 - 320, h / 2 - 300, 640, 80);
+                restartButton.setBounds(w / 4 - btnWidth / 2, h - 260, btnWidth, btnHeight);
+                exitButton.setBounds(3 * w / 4 - btnWidth / 2, h - 260, btnWidth, btnHeight);
+            }
+        });
 
         setVisible(true);
     }
@@ -55,9 +73,24 @@ public class GameOverFrame extends JFrame {
         btn.setContentAreaFilled(false);
         btn.setBorderPainted(false);
         btn.setFocusPainted(false);
-        btn.setMargin(new Insets(0, 0, 0, 0));
-        btn.setIconTextGap(0);
-        btn.setOpaque(false);
-        btn.setBorder(BorderFactory.createEmptyBorder());
     }
+    class BackgroundPanel extends JPanel {
+        private Image backgroundImage;
+
+    // ✅ 여기 이거 추가!!
+        public BackgroundPanel(String path) {
+            backgroundImage = new ImageIcon(getClass().getResource(path)).getImage();
+        }
+
+        public void setBackgroundImage(String path) {
+            backgroundImage = new ImageIcon(getClass().getResource(path)).getImage();
+        }
+
+        @Override
+        protected void paintComponent(Graphics g) {
+            super.paintComponent(g);
+            g.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), this);
+        }
+    }
+
 }

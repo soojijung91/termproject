@@ -17,7 +17,7 @@ public class StartCode extends JFrame {
         setLayout(null); // 절대 배치
 
         // 배경 패널
-        BackgroundPanel background = new BackgroundPanel("/img/StartFrame.png");
+        background = new BackgroundPanel("/img/StartFrame.png");
 
         background.setBounds(0, 0, getWidth(), getHeight());
         background.setLayout(null);
@@ -46,7 +46,10 @@ public class StartCode extends JFrame {
         // 버튼 기능
         startButton.addActionListener(e -> {
             dispose();
-            new KMHM_MainUI();
+            KMHM_MainUI game=new KMHM_MainUI();
+            game.setSize(getSize());
+            game.setLocationRelativeTo(null);
+            game.setVisible(true);
         });
 
         howToButton.addActionListener(e -> new HowToFrame());
@@ -86,8 +89,8 @@ public class StartCode extends JFrame {
     class BackgroundPanel extends JPanel {
         private Image backgroundImage;
 
-        public BackgroundPanel(String path) {
-            backgroundImage = new ImageIcon(path).getImage();
+        public BackgroundPanel(String resourcePath) {
+            backgroundImage = new ImageIcon(getClass().getResource(resourcePath)).getImage();
         }
 
         @Override
@@ -97,7 +100,10 @@ public class StartCode extends JFrame {
         }
     }
 
+
     public static void main(String[] args) {
+        
         SwingUtilities.invokeLater(StartCode::new);
     }
 }
+

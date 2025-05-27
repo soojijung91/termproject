@@ -12,7 +12,7 @@ public class HowToFrame extends JFrame {
         setLayout(null);
 
         // ✅ 배경 이미지
-        JLabel background = new JLabel(new ImageIcon("UI Background.png"));
+        JLabel background = new JLabel(new ImageIcon(getClass().getResource("/img/UIBackground.png")));
         background.setBounds(0, 0, 1100, 820);
         background.setLayout(null);
         add(background);
