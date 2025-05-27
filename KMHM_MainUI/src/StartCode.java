@@ -17,14 +17,14 @@ public class StartCode extends JFrame {
         setLayout(null); // 절대 배치
 
         // 배경 패널
-        background = new BackgroundPanel("StartFrame.png");
+        background = new BackgroundPanel("\\img\\StartFrame.png");
         background.setBounds(0, 0, getWidth(), getHeight());
         background.setLayout(null);
         add(background);
 
         // 버튼 이미지 리사이즈
-        ImageIcon rawStart = new ImageIcon("StartButton.png");
-        ImageIcon rawHowTo = new ImageIcon("HowToButton.png");
+        ImageIcon rawStart = new ImageIcon("\\img\\StartButton.png");
+        ImageIcon rawHowTo = new ImageIcon("\\img\\HowToButton.png");
 
         int btnWidth = 300;
         int btnHeight = 150;
