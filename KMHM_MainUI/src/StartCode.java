@@ -17,7 +17,7 @@ public class StartCode extends JFrame {
         setLayout(null); // 절대 배치
 
         // 배경 패널
-        background = new BackgroundPanel("\\img\\StartFrame.png");
+        BackgroundPanel background = new BackgroundPanel("\\img\\StartFrame.png");
         background.setBounds(0, 0, getWidth(), getHeight());
         background.setLayout(null);
         add(background);
