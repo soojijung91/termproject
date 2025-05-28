@@ -31,11 +31,12 @@ public class DigestiveMiniGame extends JFrame {
         setResizable(true);
 
         try {
-            backgroundImage = new ImageIcon(getClass().getResource("/asset/FrameD.png")).getImage();
+            backgroundImage = new ImageIcon(getClass().getResource("FrameD.png")).getImage();
         } catch (Exception e) {
             e.printStackTrace();
             System.exit(1);
         }
+
 
         BackgroundPanel backgroundPanel = new BackgroundPanel();
         backgroundPanel.setLayout(new BorderLayout());
@@ -74,7 +75,7 @@ public class DigestiveMiniGame extends JFrame {
         backgroundPanel.add(centerTimerPanel, BorderLayout.NORTH);
 
         // 음식 텍스트
-        foodLabel.setFont(new Font("맑은 고딕", Font.BOLD, 64));
+        foodLabel.setFont(new Font("맑은 고딕``", Font.BOLD, 64));
         foodLabel.setForeground(Color.WHITE);
         backgroundPanel.add(foodLabel, BorderLayout.CENTER);
 
@@ -84,7 +85,7 @@ public class DigestiveMiniGame extends JFrame {
         buttonPanel.setBorder(BorderFactory.createEmptyBorder(20, 200, 40, 200));
 
         healthyButton.setFont(new Font("맑은 고딕", Font.BOLD, 24));
-        unhealthyButton.setFont(new Font("맑은 고딕", Font.BOLD, 24));
+        unhealthyButton.setFont(new Font("맑은 고딕",Font.BOLD, 24));
         healthyButton.setFocusPainted(false);
         unhealthyButton.setFocusPainted(false);
 
