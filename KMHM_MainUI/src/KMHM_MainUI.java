@@ -171,6 +171,7 @@ public class KMHM_MainUI extends JFrame {
         setVisible(true);
         resizeComponents();
     }
+
     private void increase(int index) {
         int val = bars[index].getValue();
         val = Math.min(100, val + 3);
@@ -211,7 +212,7 @@ public class KMHM_MainUI extends JFrame {
         int lungX = humanX + (humanW - lungW) / 2;
         int lungY = humanY + (int) (humanH * 0.26);
         lungImg.setBounds(lungX, lungY - 80, lungW, lungH);
-// 기본 스케일 방식 사용
+        // 기본 스케일 방식 사용
         lungImg.setIcon(new ImageIcon(lungRaw.getScaledInstance(lungW, lungH, Image.SCALE_SMOOTH)));
         lungArea = new Rectangle(lungX - humanX, lungY - 80 - humanY, lungW, lungH);
 
@@ -220,7 +221,7 @@ public class KMHM_MainUI extends JFrame {
         int brainX = humanX + (humanW - brainW) / 2;
         int brainY = humanY - (int) (brainH * 0.025);
         brainImg.setBounds(brainX, brainY + 30, brainW, brainH);
-// 기본 스케일 방식 사용
+        // 기본 스케일 방식 사용
         brainImg.setIcon(new ImageIcon(brainRaw.getScaledInstance(brainW, brainH, Image.SCALE_SMOOTH)));
         brainArea = new Rectangle(brainX - humanX, brainY + 30 - humanY, brainW, brainH);
 
@@ -229,7 +230,7 @@ public class KMHM_MainUI extends JFrame {
         int digX = humanX + (humanW - digW) / 2;
         int digY = humanY + (int) (humanH * 0.25);
         digestiveImg.setBounds(digX, digY, digW, digH);
-// 기본 스케일 방식 사용
+        // 기본 스케일 방식 사용
         digestiveImg.setIcon(new ImageIcon(digestiveRaw.getScaledInstance(digW, digH, Image.SCALE_SMOOTH)));
         digArea = new Rectangle(digX - humanX, digY - humanY, digW, digH);
 
@@ -297,7 +298,8 @@ public class KMHM_MainUI extends JFrame {
             setOpaque(true);
             setBackground(new Color(10, 20, 30));
             timer = new Timer(30, e -> {
-                if (waveform.size() >= getWidth()) waveform.removeFirst();
+                if (waveform.size() >= getWidth())
+                    waveform.removeFirst();
                 waveform.add(generateWaveformPoint());
                 repaint();
             });
@@ -309,9 +311,12 @@ public class KMHM_MainUI extends JFrame {
             int height = getHeight();
             int base = height / 2;
             int spike = 0;
-            if (t % 90 == 0) spike = -30;
-            else if (t % 150 == 0) spike = 35;
-            else if (t % 200 == 0) spike = -20;
+            if (t % 90 == 0)
+                spike = -30;
+            else if (t % 150 == 0)
+                spike = 35;
+            else if (t % 200 == 0)
+                spike = -20;
             double sin = Math.sin(t * 0.2) * height * 0.25;
             double noise = rand.nextGaussian() * 4;
             return (int) (base + sin + noise + spike);
@@ -322,8 +327,10 @@ public class KMHM_MainUI extends JFrame {
             int width = getWidth();
             int height = getHeight();
             g.setColor(new Color(50, 65, 80));
-            for (int x = 0; x < width; x += 20) g.drawLine(x, 0, x, height);
-            for (int y = 0; y < height; y += 20) g.drawLine(0, y, width, y);
+            for (int x = 0; x < width; x += 20)
+                g.drawLine(x, 0, x, height);
+            for (int y = 0; y < height; y += 20)
+                g.drawLine(0, y, width, y);
             g.setColor(Color.GREEN);
             int prevY = waveform.size() > 0 ? waveform.get(0) : height / 2;
             for (int i = 1; i < waveform.size(); i++) {

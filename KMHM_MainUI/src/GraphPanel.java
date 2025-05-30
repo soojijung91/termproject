@@ -42,6 +42,16 @@ public class GraphPanel extends JPanel {
         return (int) (base + sin + noise + spike);
     }
 
+    public void showFlatline() {
+        timer.stop();
+        waveform.clear();
+        int flatY = getHeight() / 2;
+        for (int i = 0; i < maxPoints; i++) {
+            waveform.add(flatY);
+        }
+        repaint();
+    }
+
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
