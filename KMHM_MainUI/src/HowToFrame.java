@@ -6,7 +6,7 @@ public class HowToFrame extends JFrame {
 
     public HowToFrame() {
         setTitle("How to Play");
-        setSize(1073, 768); // 💡 게임 창보다 살짝 작은 크기
+        setSize(1073, 790); // 💡 게임 창보다 살짝 작은 크기
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLayout(null);
@@ -72,7 +72,7 @@ public class HowToFrame extends JFrame {
         // ✅ OK 버튼
         JButton okBtn = new JButton("OK");
         okBtn.setFont(new Font("맑은 고딕", Font.BOLD, 24));
-        okBtn.setBounds(480, 700, 140, 50);
+        okBtn.setBounds(480, 650, 140, 50);
         okBtn.setFocusPainted(false);
         okBtn.setBackground(Color.WHITE);
         okBtn.setForeground(Color.BLACK);
