@@ -28,6 +28,7 @@ public class KMHM_MainUI extends JFrame {
 
     private GraphPanel ecgPanel;
     private Timer decayTimer;
+    private boolean gameOverShown = false;
 
     public KMHM_MainUI() {
         setTitle("KMHM - Game Screen");
@@ -174,10 +175,14 @@ public class KMHM_MainUI extends JFrame {
     }
 
     private void checkGameStatus() {
+        if (gameOverShown)
+            return;
+
         boolean allAbove80 = true;
         for (JProgressBar bar : bars) {
             int value = bar.getValue();
             if (value <= 0) {
+                gameOverShown = true;
                 new GameOverFrame(centerClockLabel.getText());
                 dispose();
                 return;
@@ -187,6 +192,7 @@ public class KMHM_MainUI extends JFrame {
             }
         }
         if (allAbove80) {
+            gameOverShown = true;
             new GameClearFrame(centerClockLabel.getText());
             dispose();
         }
