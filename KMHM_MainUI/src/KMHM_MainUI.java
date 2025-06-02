@@ -123,6 +123,7 @@ public class KMHM_MainUI extends JFrame {
                     percentLabels[i].setText((val - 1) + "%");
                 }
             }
+            checkGameStatus();
         });
         decayTimer.start();
 
@@ -172,11 +173,31 @@ public class KMHM_MainUI extends JFrame {
         resizeComponents();
     }
 
+    private void checkGameStatus() {
+        boolean allAbove80 = true;
+        for (JProgressBar bar : bars) {
+            int value = bar.getValue();
+            if (value <= 0) {
+                new GameOverFrame(centerClockLabel.getText());
+                dispose();
+                return;
+            }
+            if (value < 80) {
+                allAbove80 = false;
+            }
+        }
+        if (allAbove80) {
+            new GameClearFrame(centerClockLabel.getText());
+            dispose();
+        }
+    }
+
     private void increase(int index) {
         int val = bars[index].getValue();
         val = Math.min(100, val + 3);
         bars[index].setValue(val);
         percentLabels[index].setText(val + "%");
+        checkGameStatus();
     }
 
     private void resizeComponents() {
