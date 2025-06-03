@@ -7,11 +7,6 @@ import java.io.IOException;
 import java.util.LinkedList;
 import java.util.Random;
 
-import mg.nervous.NervousSystemGame;
-import mg.respiratory.respiratory;
-import mg.digestive.DigestiveMiniGame;
-import mg.circulatory.CirculatoryGame;
-
 public class KMHM_MainUI extends JFrame {
 
     private JLabel background, human, scanning, gameTimer, groupWave, rightComponents, stopBtn;
@@ -41,18 +36,18 @@ public class KMHM_MainUI extends JFrame {
         setLocationRelativeTo(null);
         setLayout(null);
 
-        bgImg = new ImageIcon(getClass().getResource("UIBackground.png")).getImage();
-        humanImg = new ImageIcon(getClass().getResource("3D Illustration.png")).getImage();
-        scanningImg = new ImageIcon(getClass().getResource("_Scanning_.png")).getImage();
-        timerImg = new ImageIcon(getClass().getResource("Game Timer.png")).getImage();
-        groupImg = new ImageIcon(getClass().getResource("Group.png")).getImage();
-        rightImg = new ImageIcon(getClass().getResource("Right Components.png")).getImage();
-        stopImg = new ImageIcon(getClass().getResource("CTA.png")).getImage();
-        lungRaw = new ImageIcon(getClass().getResource("폐 이미지.png")).getImage();
-        brainRaw = new ImageIcon(getClass().getResource("신경계 이미지.png")).getImage();
-        digestiveRaw = new ImageIcon(getClass().getResource("소화계 이미지.png")).getImage();
-        pulseRateImg = new ImageIcon(getClass().getResource("Pulse Rate.png")).getImage();
-        pulseGroupImg = new ImageIcon(getClass().getResource("Group-1.png")).getImage();
+        bgImg = new ImageIcon(getClass().getResource("/img/UIBackground.png")).getImage();
+        humanImg = new ImageIcon(getClass().getResource("/img/3D Illustration.png")).getImage();
+        scanningImg = new ImageIcon(getClass().getResource("/img/_Scanning_.png")).getImage();
+        timerImg = new ImageIcon(getClass().getResource("/img/Game Timer.png")).getImage();
+        groupImg = new ImageIcon(getClass().getResource("/img/Group.png")).getImage();
+        rightImg = new ImageIcon(getClass().getResource("/img/Right Components.png")).getImage();
+        stopImg = new ImageIcon(getClass().getResource("/img/CTA.png")).getImage();
+        lungRaw = new ImageIcon(getClass().getResource("/img/폐 이미지.png")).getImage();
+        brainRaw = new ImageIcon(getClass().getResource("/img/신경계 이미지.png")).getImage();
+        digestiveRaw = new ImageIcon(getClass().getResource("/img/소화계 이미지.png")).getImage();
+        pulseRateImg = new ImageIcon(getClass().getResource("/img/Pulse Rate.png")).getImage();
+        pulseGroupImg = new ImageIcon(getClass().getResource("/img/Group-1.png")).getImage();
 
         background = new JLabel();
         human = new JLabel();
@@ -153,23 +148,17 @@ public class KMHM_MainUI extends JFrame {
         add(human);
         add(background);
 
-        // ✅ 수정된 부분: 클릭 시 미니게임 실행
         human.addMouseListener(new MouseAdapter() {
             public void mouseClicked(MouseEvent e) {
                 Point p = e.getPoint();
-                try {
-                    if (brainArea != null && brainArea.contains(p)) {
-                        new NervousSystemGame().setVisible(true);
-                    } else if (lungArea != null && lungArea.contains(p)) {
-                        new respiratory().setVisible(true);
-                    } else if (digArea != null && digArea.contains(p)) {
-                        new DigestiveMiniGame().setVisible(true);
-                    } else {
-                        new CirculatoryGame().setVisible(true);
-                    }
-                } catch (Exception ex) {
-                    System.err.println("미니게임 실행 오류: " + ex.getMessage());
-                }
+                if (brainArea != null && brainArea.contains(p))
+                    increase(0);
+                else if (lungArea != null && lungArea.contains(p))
+                    increase(1);
+                else if (digArea != null && digArea.contains(p))
+                    increase(2);
+                else
+                    increase(3);
             }
         });
 
@@ -183,8 +172,109 @@ public class KMHM_MainUI extends JFrame {
         resizeComponents();
     }
 
+    private void increase(int index) {
+        int val = bars[index].getValue();
+        val = Math.min(100, val + 3);
+        bars[index].setValue(val);
+        percentLabels[index].setText(val + "%");
+    }
+
     private void resizeComponents() {
-        // ... 기존 컴포넌트 위치 계산 그대로 유지 (생략)
+        int w = getWidth();
+        int h = getHeight();
+
+        int marginX = 20;
+        int usableWidth = (int) (w * 0.28);
+        int startY = 40;
+        int spacing = (int) ((h - startY * 2) / 5.0);
+        int barHeight = 24;
+        int labelHeight = 18;
+
+        for (int i = 0; i < 4; i++) {
+            int y = startY + i * spacing;
+            nameLabels[i].setBounds(marginX, y, 150, labelHeight);
+            bars[i].setBounds(marginX, y + labelHeight + 2, usableWidth - 60, barHeight);
+            percentLabels[i].setBounds(marginX + usableWidth - 50, y + labelHeight + 2, 50, barHeight);
+        }
+
+        background.setBounds(0, 0, w, h);
+        background.setIcon(new ImageIcon(getHighQualityScaledImage(bgImg, w, h)));
+
+        int humanW = (int) (w * 0.43);
+        int humanH = (int) (h * 0.85);
+        int humanX = (w - humanW) / 2;
+        int humanY = (int) (h * 0.08);
+        human.setBounds(humanX, humanY, humanW, humanH);
+        human.setIcon(new ImageIcon(getHighQualityScaledImage(humanImg, humanW, humanH)));
+
+        int lungW = (int) (humanW * 0.23);
+        int lungH = (int) (humanH * 0.15);
+        int lungX = humanX + (humanW - lungW) / 2;
+        int lungY = humanY + (int) (humanH * 0.26);
+        lungImg.setBounds(lungX, lungY - 80, lungW, lungH);
+        // 기본 스케일 방식 사용
+        lungImg.setIcon(new ImageIcon(lungRaw.getScaledInstance(lungW, lungH, Image.SCALE_SMOOTH)));
+        lungArea = new Rectangle(lungX - humanX, lungY - 80 - humanY, lungW, lungH);
+
+        int brainW = (int) (humanW * 0.12);
+        int brainH = brainW;
+        int brainX = humanX + (humanW - brainW) / 2;
+        int brainY = humanY - (int) (brainH * 0.025);
+        brainImg.setBounds(brainX, brainY + 30, brainW, brainH);
+        // 기본 스케일 방식 사용
+        brainImg.setIcon(new ImageIcon(brainRaw.getScaledInstance(brainW, brainH, Image.SCALE_SMOOTH)));
+        brainArea = new Rectangle(brainX - humanX, brainY + 30 - humanY, brainW, brainH);
+
+        int digW = (int) (humanW * 0.20);
+        int digH = (int) (humanH * 0.15);
+        int digX = humanX + (humanW - digW) / 2;
+        int digY = humanY + (int) (humanH * 0.25);
+        digestiveImg.setBounds(digX, digY, digW, digH);
+        // 기본 스케일 방식 사용
+        digestiveImg.setIcon(new ImageIcon(digestiveRaw.getScaledInstance(digW, digH, Image.SCALE_SMOOTH)));
+        digArea = new Rectangle(digX - humanX, digY - humanY, digW, digH);
+
+        int timerW = (int) (w * 0.14);
+        int timerH = (int) (timerW * 0.1);
+        int timerX = (int) (w * 0.76);
+        int timerY = (int) (h * 0.06);
+        gameTimer.setBounds(timerX, timerY, timerW, timerH);
+        gameTimer.setIcon(new ImageIcon(getHighQualityScaledImage(timerImg, timerW, timerH)));
+
+        int groupSize = (int) (timerH * 1.1);
+        groupWave.setBounds(timerX + timerW + 15, timerY + 1, groupSize, groupSize);
+        groupWave.setIcon(new ImageIcon(getHighQualityScaledImage(groupImg, groupSize, groupSize)));
+
+        int rightSize = (int) (w * 0.25);
+        int rightX = timerX;
+        int rightY = timerY + timerH + 10;
+        rightComponents.setBounds(rightX - 20, rightY, rightSize, rightSize);
+        rightComponents.setIcon(new ImageIcon(getHighQualityScaledImage(rightImg, rightSize, rightSize)));
+
+        int timeW = rightSize;
+        int timeH = 30;
+        int timeX = rightX - 21;
+        int timeY = rightY + (rightSize - timeH) / 2;
+        centerClockLabel.setBounds(timeX - 5, timeY - 5, timeW, timeH);
+
+        int pulseW = timerW;
+        int pulseH = timerH;
+        int pulseX = rightX;
+        int pulseY = rightY + rightSize + 5;
+        pulseRateLabel.setBounds(pulseX, pulseY, pulseW, pulseH);
+        pulseRateLabel.setIcon(new ImageIcon(getHighQualityScaledImage(pulseRateImg, pulseW, pulseH)));
+        pulseGroupIcon.setBounds(pulseX + pulseW + 10, pulseY + 1, groupSize, groupSize);
+        pulseGroupIcon.setIcon(new ImageIcon(getHighQualityScaledImage(pulseGroupImg, groupSize, groupSize)));
+
+        ecgPanel.setBounds(pulseX, pulseY + pulseH + 5, rightSize, 80);
+
+        int stopW = 140;
+        int stopH = 60;
+        stopBtn.setBounds(w - stopW - 30, h - stopH - 40, stopW, stopH);
+        stopBtn.setIcon(new ImageIcon(getHighQualityScaledImage(stopImg, stopW, stopH)));
+
+        scanning.setBounds((w - (int) (w * 0.17)) / 2 + 15, (int) (h * 0.03), (int) (w * 0.17), (int) (h * 0.05));
+        scanning.setIcon(new ImageIcon(getHighQualityScaledImage(scanningImg, (int) (w * 0.17), (int) (h * 0.05))));
     }
 
     private Image getHighQualityScaledImage(Image srcImg, int w, int h) {
@@ -208,14 +298,11 @@ public class KMHM_MainUI extends JFrame {
             setOpaque(true);
             setBackground(new Color(10, 20, 30));
             timer = new Timer(30, e -> {
-                if (!waveform.isEmpty() && waveform.size() >= getWidth()) {
+                if (waveform.size() >= getWidth())
                     waveform.removeFirst();
-                }
                 waveform.add(generateWaveformPoint());
                 repaint();
             });
-
-
             timer.start();
         }
 
