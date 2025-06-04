@@ -11,20 +11,16 @@ public class StartCode extends JFrame {
     public StartCode() {
         setTitle("Kill Me Heal Me");
         setSize(1073, 768);
-        setResizable(true); // ✅ 창 크기 조절 허용
+        setResizable(true);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
-        setLayout(null); // 절대 배치
+        setLayout(null);
 
-        // 배경 패널
         background = new BackgroundPanel("/img/StartFrame.png");
-
         background.setBounds(0, 0, getWidth(), getHeight());
         background.setLayout(null);
         add(background);
 
-        // 버튼 이미지 리사이즈
-        // 이미지 리소스 로드
         ImageIcon rawStart = new ImageIcon(getClass().getResource("/img/StartButton.png"));
         ImageIcon rawHowTo = new ImageIcon(getClass().getResource("/img/HowToButton.png"));
 
@@ -42,37 +38,71 @@ public class StartCode extends JFrame {
         background.add(startButton);
         background.add(howToButton);
 
-        // 버튼 기능
+        // ✅ 사용자 정보 입력 팝업으로 변경된 부분
         startButton.addActionListener(e -> {
-            dispose();
-            KMHM_MainUI game = new KMHM_MainUI();
-            game.setSize(getSize());
-            game.setLocationRelativeTo(null);
-            game.setVisible(true);
+            JTextField nameField = new JTextField();
+            JTextField ageField = new JTextField();
+            String[] genderOptions = { "남성", "여성", "기타" };
+            JComboBox<String> genderBox = new JComboBox<>(genderOptions);
+            JTextField heightField = new JTextField();
+            JTextField weightField = new JTextField();
+
+            JPanel panel = new JPanel(new GridLayout(0, 2, 10, 10));
+            panel.add(new JLabel("이름:"));
+            panel.add(nameField);
+            panel.add(new JLabel("나이:"));
+            panel.add(ageField);
+            panel.add(new JLabel("성별:"));
+            panel.add(genderBox);
+            panel.add(new JLabel("키 (cm):"));
+            panel.add(heightField);
+            panel.add(new JLabel("몸무게 (kg):"));
+            panel.add(weightField);
+
+            int result = JOptionPane.showConfirmDialog(
+                    this, panel, "환자 정보 입력", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+
+            if (result == JOptionPane.OK_OPTION) {
+                String name = nameField.getText().trim();
+                String age = ageField.getText().trim();
+                String gender = (String) genderBox.getSelectedItem();
+                String height = heightField.getText().trim();
+                String weight = weightField.getText().trim();
+
+                if (name.isEmpty() || age.isEmpty() || height.isEmpty() || weight.isEmpty()) {
+                    JOptionPane.showMessageDialog(this, "모든 항목을 입력해주세요.");
+                    return;
+                }
+
+                System.out.println("이름: " + name);
+                System.out.println("나이: " + age);
+                System.out.println("성별: " + gender);
+                System.out.println("키: " + height);
+                System.out.println("몸무게: " + weight);
+
+                dispose();
+                KMHM_MainUI game = new KMHM_MainUI();
+                game.setSize(getSize());
+                game.setLocationRelativeTo(null);
+                game.setVisible(true);
+            }
         });
 
         howToButton.addActionListener(e -> new HowToFrame());
 
-        // 🔁 창 크기 조절에 반응하는 리스너
         addComponentListener(new ComponentAdapter() {
             public void componentResized(ComponentEvent e) {
                 int w = getWidth();
                 int h = getHeight();
 
-                // 배경 사이즈 맞추기
                 background.setBounds(0, 0, w, h);
 
-                // 버튼 위치 반응형 조정
-                int btnWidth = 300;
-                int btnHeight = 150;
                 int yOffset = h - 260;
-
                 startButton.setBounds(w / 4 - btnWidth / 2, yOffset, btnWidth, btnHeight);
                 howToButton.setBounds(3 * w / 4 - btnWidth / 2, yOffset, btnWidth, btnHeight);
             }
         });
 
-        // 최초 위치 한번 설정
         SwingUtilities.invokeLater(() -> {
             setVisible(true);
             dispatchEvent(new ComponentEvent(this, ComponentEvent.COMPONENT_RESIZED));
@@ -100,7 +130,6 @@ public class StartCode extends JFrame {
     }
 
     public static void main(String[] args) {
-
         SwingUtilities.invokeLater(StartCode::new);
     }
 }
