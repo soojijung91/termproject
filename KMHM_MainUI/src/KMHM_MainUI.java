@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.util.LinkedList;
 import java.util.Random;
 
+
 public class KMHM_MainUI extends JFrame {
 
     private JLabel background, human, scanning, gameTimer, groupWave, rightComponents, stopBtn;
@@ -36,6 +37,7 @@ public class KMHM_MainUI extends JFrame {
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         setLayout(null);
+
 
         bgImg = new ImageIcon(getClass().getResource("/img/UIBackground.png")).getImage();
         humanImg = new ImageIcon(getClass().getResource("/img/3D Illustration.png")).getImage();
@@ -127,6 +129,10 @@ public class KMHM_MainUI extends JFrame {
             checkGameStatus();
         });
         decayTimer.start();
+        for (int i = 0; i < 4; i++) {
+            triggerClicks[i] = 1 + random.nextInt(8); // 1~8 중 무작위 시점
+        }
+
 
         centerClockTimer = new Timer(1000, e -> {
             elapsedSeconds++;
@@ -173,6 +179,10 @@ public class KMHM_MainUI extends JFrame {
         setVisible(true);
         resizeComponents();
     }
+    private int[] clickCounts = new int[4];
+    private int[] triggerClicks = new int[4];
+    private Random random = new Random();
+
 
     private void checkGameStatus() {
         if (gameOverShown)
@@ -197,14 +207,157 @@ public class KMHM_MainUI extends JFrame {
             dispose();
         }
     }
-
-    private void increase(int index) {
+    private void updateGauge(int index, int increment, String feedbackMsg) {
         int val = bars[index].getValue();
-        val = Math.min(100, val + 3);
+        val = Math.min(100, val + increment);
         bars[index].setValue(val);
         percentLabels[index].setText(val + "%");
+
+        JOptionPane.showMessageDialog(this, feedbackMsg, systemNames[index] + " 피드백", JOptionPane.INFORMATION_MESSAGE);
+    }
+
+    private void increase(int index) {
+        // 각 시스템별 질문, 선택지, 점수
+        String[][] questions = {
+                // Nervous System
+                {
+                        "1. 하루 평균 수면 시간은 몇 시간인가요?\n- 7~8시간\n- 6시간\n- 5시간 이하",
+                        "2. 최근 일주일 동안 스트레스를 많이 받았나요?\n- 아니오\n- 보통\n- 예",
+                        "3. 자기 전에 전자기기(스마트폰, 컴퓨터 등)를 얼마나 사용하나요?\n- 1시간 전 끔\n- 10분 전\n- 계속 사용"
+                },
+                // Respiratory System
+                {
+                        "1. 하루에 얼마나 자주 환기를 시키시나요?\n- 3번 이상\n- 1~2번\n- 없음",
+                        "2. 운동 중 숨이 차거나 호흡 곤란을 느낀 적이 있나요?\n- 없음\n- 가끔 있음\n- 자주 있음",
+                        "3. 최근 감기, 기침 또는 인후통 등의 증상이 있었나요?\n- 없음\n- 최근 있음\n- 지금도 있음"
+                },
+                // Digestive System
+                {
+                        "1. 평소 식사 시간을 규칙적으로 지키시나요?\n- 항상\n- 가끔\n- 불규칙",
+                        "2. 일주일에 몇 번 외식을 하나요?\n- 주 1~2회\n- 주 3~4회\n- 거의 매일",
+                        "3. 변비나 복부 불편감을 자주 느끼시나요?\n- 없음\n- 가끔 있음\n- 자주 있음"
+                },
+                // Circulatory System
+                {
+                        "1. 평소 혈압을 측정한 적이 있나요?\n- 주기적으로 측정\n- 가끔\n- 없음",
+                        "2. 일주일에 몇 번 정도 유산소 운동(걷기, 조깅 등)을 하시나요?\n- 주 3회 이상\n- 주 1~2회\n- 없음",
+                        "3. 짠 음식이나 기름진 음식을 자주 드시나요?\n- 거의 안 먹음\n- 가끔 먹음\n- 자주 먹음"
+                }
+        };
+
+        String[][][] options = {
+                { // Nervous System
+                        {"7~8시간", "6시간", "5시간 이하"},
+                        {"아니오", "보통", "예"},
+                        {"1시간 전 끔", "10분 전", "계속 사용"}
+                },
+                { // Respiratory System
+                        {"3번 이상", "1~2번", "없음"},
+                        {"없음", "가끔 있음", "자주 있음"},
+                        {"없음", "최근 있음", "지금도 있음"}
+                },
+                { // Digestive System
+                        {"항상", "가끔", "불규칙"},
+                        {"주 1~2회", "주 3~4회", "거의 매일"},
+                        {"없음", "가끔 있음", "자주 있음"}
+                },
+                { // Circulatory System
+                        {"주기적으로 측정", "가끔", "없음"},
+                        {"주 3회 이상", "주 1~2회", "없음"},
+                        {"거의 안 먹음", "가끔 먹음", "자주 먹음"}
+                }
+        };
+
+        int[][][] scores = {
+                { // Nervous System
+                        {10, 7, 3},
+                        {10, 5, 0},
+                        {10, 5, 0}
+                },
+                { // Respiratory System
+                        {10, 5, 0},
+                        {10, 5, 0},
+                        {10, 5, 0}
+                },
+                { // Digestive System
+                        {10, 5, 0},
+                        {10, 5, 0},
+                        {10, 5, 0}
+                },
+                { // Circulatory System
+                        {10, 5, 0},
+                        {10, 5, 0},
+                        {10, 5, 0}
+                }
+        };
+
+        // 입력 패널
+        JPanel panel = new JPanel(new GridLayout(0, 2, 5, 8));
+        JComboBox<String>[] fields = new JComboBox[3];
+
+        for (int i = 0; i < 3; i++) {
+            panel.add(new JLabel(questions[index][i]));
+            fields[i] = new JComboBox<>(options[index][i]);
+            panel.add(fields[i]);
+        }
+
+        int result = JOptionPane.showConfirmDialog(
+                this, panel, systemNames[index] + " 건강 설문", JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE
+        );
+
+        if (result == JOptionPane.OK_OPTION) {
+            int totalScore = 0;
+            for (int i = 0; i < 3; i++) {
+                int selIdx = fields[i].getSelectedIndex();
+                totalScore += scores[index][i][selIdx];
+            }
+
+            // 점수구간별 게이지 변화량, 피드백 결정
+            int gaugeDelta;
+            String feedbackMsg;
+            if (totalScore >= 25) {
+                gaugeDelta = 10;
+            } else if (totalScore >= 15) {
+                gaugeDelta = 5;
+            } else {
+                gaugeDelta = -10;
+            }
+            // 시스템별 상세 피드백
+            String[][] feedbacks = {
+                    {
+                            "충분한 수면과 스트레스 관리, 올바른 스마트폰 사용 습관까지! 신경계 건강이 매우 우수합니다.",
+                            "평균 이상의 습관이지만, 수면시간이나 스트레스 해소에 조금 더 신경 쓰면 더 좋겠어요.",
+                            "수면, 스트레스, 스마트폰 사용 습관을 점검해 보세요. 신경계 건강 개선이 필요해요!"
+                    },
+                    {
+                            "적절한 환기, 운동, 감기 예방까지! 호흡기 건강이 아주 좋습니다.",
+                            "호흡기 건강을 잘 관리하고 있지만, 환기나 운동 습관을 조금만 더 챙기면 좋아요.",
+                            "호흡기 건강이 걱정돼요. 환기·운동 습관을 다시 한번 점검해 보세요!"
+                    },
+                    {
+                            "식습관이 매우 규칙적이고, 소화기 건강도 아주 우수합니다!",
+                            "소화기 건강을 잘 관리하고 있지만, 식사시간이나 외식 빈도를 조금 더 신경 써보세요.",
+                            "소화기 건강에 주의가 필요해요. 규칙적인 식사와 적당한 외식이 중요합니다."
+                    },
+                    {
+                            "혈압 관리, 운동, 식습관까지! 순환기 건강이 매우 우수해요.",
+                            "순환기 건강이 나쁘진 않지만, 더 규칙적인 운동과 식단이 필요해 보입니다.",
+                            "순환기 건강에 빨간불! 혈압 측정과 운동, 식습관 개선을 시작해 보세요."
+                    }
+            };
+
+            int fbIdx = (totalScore >= 25) ? 0 : (totalScore >= 15) ? 1 : 2;
+            feedbackMsg = feedbacks[index][fbIdx];
+
+            updateGauge(index, gaugeDelta, feedbackMsg);
+        } else {
+            updateGauge(index, 0, "답변을 건너뛰셨습니다. 건강 설문에 참여해 주세요!");
+        }
+
         checkGameStatus();
     }
+
+
 
     private void resizeComponents() {
         int w = getWidth();
