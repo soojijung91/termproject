@@ -7,7 +7,6 @@ import java.io.IOException;
 import java.util.LinkedList;
 import java.util.Random;
 
-
 public class KMHM_MainUI extends JFrame {
 
     private JLabel background, human, scanning, gameTimer, groupWave, rightComponents, stopBtn;
@@ -37,7 +36,6 @@ public class KMHM_MainUI extends JFrame {
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         setLayout(null);
-
 
         bgImg = new ImageIcon(getClass().getResource("/img/UIBackground.png")).getImage();
         humanImg = new ImageIcon(getClass().getResource("/img/3D Illustration.png")).getImage();
@@ -101,12 +99,11 @@ public class KMHM_MainUI extends JFrame {
 
         for (int i = 0; i < 4; i++) {
             bars[i].setValue(0);
-            bars[i].setString("--");         // 게이지바 안에 "--"로 표시
-            bars[i].setStringPainted(true);  // 문자열 표시 활성화
-            percentLabels[i].setText("--%");  // (percentLabels는 게이지 옆에 별도 텍스트라면 그대로 둬도 OK)
+            bars[i].setString("--"); // 게이지바 안에 "--"로 표시
+            bars[i].setStringPainted(true); // 문자열 표시 활성화
+            percentLabels[i].setText("--%"); // (percentLabels는 게이지 옆에 별도 텍스트라면 그대로 둬도 OK)
         }
-
-
+/*
         decayTimer = new Timer(2000, e -> {
             for (int i = 0; i < 4; i++) {
                 int val = bars[i].getValue();
@@ -121,8 +118,7 @@ public class KMHM_MainUI extends JFrame {
         for (int i = 0; i < 4; i++) {
             triggerClicks[i] = 1 + random.nextInt(8); // 1~8 중 무작위 시점
         }
-
-
+*/
         centerClockTimer = new Timer(1000, e -> {
             elapsedSeconds++;
             int min = elapsedSeconds / 60;
@@ -168,13 +164,14 @@ public class KMHM_MainUI extends JFrame {
         setVisible(true);
         resizeComponents();
     }
+
     private int[] clickCounts = new int[4];
     private int[] triggerClicks = new int[4];
     private Random random = new Random();
 
-
     private void checkGameStatus() {
     }
+
     private void updateGauge(int index, int increment, String feedbackMsg) {
         int val = bars[index].getValue();
         val = Math.min(100, val + increment);
@@ -263,63 +260,63 @@ public class KMHM_MainUI extends JFrame {
 
         String[][][] options = {
                 { // Nervous System
-                        {"7~8시간", "6시간", "5시간", "4시간", "4시간 미만"},
-                        {"아니오", "보통", "가끔", "자주", "매우 자주"},
-                        {"1시간 전 끔", "30분 전", "10분 전", "잠들 때까지 사용", "계속 사용"},
-                        {"있다(규칙적)", "가끔 있다", "거의 없다", "전혀 없다", "모름"},
-                        {"없다", "거의 없다", "가끔", "자주", "매우 자주"}
+                        { "7~8시간", "6시간", "5시간", "4시간", "4시간 미만" },
+                        { "아니오", "보통", "가끔", "자주", "매우 자주" },
+                        { "1시간 전 끔", "30분 전", "10분 전", "잠들 때까지 사용", "계속 사용" },
+                        { "있다(규칙적)", "가끔 있다", "거의 없다", "전혀 없다", "모름" },
+                        { "없다", "거의 없다", "가끔", "자주", "매우 자주" }
                 },
                 { // Respiratory System
-                        {"3번 이상", "2번", "1번", "가끔", "전혀 없음"},
-                        {"없음", "거의 없음", "가끔 있음", "자주 있음", "매우 자주 있음"},
-                        {"없음", "한 번", "두 번", "세 번 이상", "지금도 있음"},
-                        {"항상 착용", "대부분 착용", "가끔 착용", "거의 안 함", "전혀 안 함"},
-                        {"없음", "거의 없음", "가끔", "자주", "매우 자주"}
+                        { "3번 이상", "2번", "1번", "가끔", "전혀 없음" },
+                        { "없음", "거의 없음", "가끔 있음", "자주 있음", "매우 자주 있음" },
+                        { "없음", "한 번", "두 번", "세 번 이상", "지금도 있음" },
+                        { "항상 착용", "대부분 착용", "가끔 착용", "거의 안 함", "전혀 안 함" },
+                        { "없음", "거의 없음", "가끔", "자주", "매우 자주" }
                 },
                 { // Digestive System
-                        {"항상", "대부분", "가끔", "거의 없음", "불규칙"},
-                        {"없음", "주 1~2회", "주 3~4회", "주 5회 이상", "매일"},
-                        {"없음", "거의 없음", "가끔 있음", "자주 있음", "매우 자주 있음"},
-                        {"없음", "거의 없음", "가끔", "자주", "매우 자주"},
-                        {"1.5L 이상", "1L 이상", "0.5~1L", "0.5L 미만", "거의 안 마심"}
+                        { "항상", "대부분", "가끔", "거의 없음", "불규칙" },
+                        { "없음", "주 1~2회", "주 3~4회", "주 5회 이상", "매일" },
+                        { "없음", "거의 없음", "가끔 있음", "자주 있음", "매우 자주 있음" },
+                        { "없음", "거의 없음", "가끔", "자주", "매우 자주" },
+                        { "1.5L 이상", "1L 이상", "0.5~1L", "0.5L 미만", "거의 안 마심" }
                 },
                 { // Circulatory System
-                        {"주기적으로 측정", "가끔", "1~2번", "거의 없음", "전혀 없음"},
-                        {"주 5회 이상", "주 3~4회", "주 1~2회", "가끔", "전혀 없음"},
-                        {"거의 안 먹음", "가끔 먹음", "보통", "자주 먹음", "매우 자주 먹음"},
-                        {"없음", "1~2kg 증가", "1~2kg 감소", "3kg 이상 변화", "모름"},
-                        {"없음", "잘 모름", "먼 친척", "직계 가족 중 1명", "직계 가족 2명 이상"}
+                        { "주기적으로 측정", "가끔", "1~2번", "거의 없음", "전혀 없음" },
+                        { "주 5회 이상", "주 3~4회", "주 1~2회", "가끔", "전혀 없음" },
+                        { "거의 안 먹음", "가끔 먹음", "보통", "자주 먹음", "매우 자주 먹음" },
+                        { "없음", "1~2kg 증가", "1~2kg 감소", "3kg 이상 변화", "모름" },
+                        { "없음", "잘 모름", "먼 친척", "직계 가족 중 1명", "직계 가족 2명 이상" }
                 }
         };
 
         int[][][] scores = {
                 { // Nervous System
-                        {10, 8, 6, 3, 0},
-                        {10, 8, 6, 3, 0},
-                        {10, 8, 6, 3, 0},
-                        {10, 8, 6, 3, 0},
-                        {10, 8, 6, 3, 0}
+                        { 10, 8, 6, 3, 0 },
+                        { 10, 8, 6, 3, 0 },
+                        { 10, 8, 6, 3, 0 },
+                        { 10, 8, 6, 3, 0 },
+                        { 10, 8, 6, 3, 0 }
                 },
                 { // Respiratory System
-                        {10, 8, 6, 3, 0},
-                        {10, 8, 6, 3, 0},
-                        {10, 8, 6, 3, 0},
-                        {10, 8, 6, 3, 0},
-                        {10, 8, 6, 3, 0}
+                        { 10, 8, 6, 3, 0 },
+                        { 10, 8, 6, 3, 0 },
+                        { 10, 8, 6, 3, 0 },
+                        { 10, 8, 6, 3, 0 },
+                        { 10, 8, 6, 3, 0 }
                 },
                 { // Digestive System
-                        {10, 8, 6, 3, 0},
-                        {10, 8, 6, 3, 0},
-                        {10, 8, 6, 3, 0},
-                        {10, 8, 6, 3, 0},
-                        {10, 8, 6, 3, 0}
+                        { 10, 8, 6, 3, 0 },
+                        { 10, 8, 6, 3, 0 },
+                        { 10, 8, 6, 3, 0 },
+                        { 10, 8, 6, 3, 0 },
+                        { 10, 8, 6, 3, 0 }
                 },
                 { // Circulatory System
-                        {10, 8, 6, 3, 0},
-                        {10, 8, 6, 3, 0},
-                        {10, 8, 6, 3, 0},
-                        {10, 8, 6, 3, 0},
-                        {10, 8, 6, 3, 0}
+                        { 10, 8, 6, 3, 0 },
+                        { 10, 8, 6, 3, 0 },
+                        { 10, 8, 6, 3, 0 },
+                        { 10, 8, 6, 3, 0 },
+                        { 10, 8, 6, 3, 0 }
                 }
         };
 
@@ -335,8 +332,7 @@ public class KMHM_MainUI extends JFrame {
         }
 
         int result = JOptionPane.showConfirmDialog(
-                this, panel, systemNames[index] + " 건강 설문", JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE
-        );
+                this, panel, systemNames[index] + " 건강 설문", JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);
 
         if (result == JOptionPane.OK_OPTION) {
             int totalScore = 0;
@@ -393,11 +389,16 @@ public class KMHM_MainUI extends JFrame {
 
             };
             int fbIdx;
-            if (totalScore >= 45) fbIdx = 0;
-            else if (totalScore >= 40) fbIdx = 1;
-            else if (totalScore >= 35) fbIdx = 2;
-            else if (totalScore >= 25) fbIdx = 3;
-            else fbIdx = 4;
+            if (totalScore >= 45)
+                fbIdx = 0;
+            else if (totalScore >= 40)
+                fbIdx = 1;
+            else if (totalScore >= 35)
+                fbIdx = 2;
+            else if (totalScore >= 25)
+                fbIdx = 3;
+            else
+                fbIdx = 4;
             feedbackMsg = feedbacks[index][fbIdx];
 
             bars[index].setValue(gaugePercent);
@@ -406,8 +407,7 @@ public class KMHM_MainUI extends JFrame {
 
             String msg = String.format(
                     "점수: %d점\n게이지: %d%%\n\n%s",
-                    totalScore, gaugePercent, feedbackMsg
-            );
+                    totalScore, gaugePercent, feedbackMsg);
             JOptionPane.showMessageDialog(this, msg, systemNames[index] + " 설문 결과", JOptionPane.INFORMATION_MESSAGE);
 
             // ---- 2. 목표 추천이 그 다음에 ----
@@ -429,10 +429,6 @@ public class KMHM_MainUI extends JFrame {
 
         checkGameStatus();
     }
-
-
-
-
 
     private void resizeComponents() {
         int w = getWidth();
@@ -512,17 +508,6 @@ public class KMHM_MainUI extends JFrame {
         int timeY = rightY + (rightSize - timeH) / 2;
         centerClockLabel.setBounds(timeX - 5, timeY - 5, timeW, timeH);
 
-        int pulseW = timerW;
-        int pulseH = timerH;
-        int pulseX = rightX;
-        int pulseY = rightY + rightSize + 5;
-        pulseRateLabel.setBounds(pulseX, pulseY, pulseW, pulseH);
-        pulseRateLabel.setIcon(new ImageIcon(getHighQualityScaledImage(pulseRateImg, pulseW, pulseH)));
-        pulseGroupIcon.setBounds(pulseX + pulseW + 10, pulseY + 1, groupSize, groupSize);
-        pulseGroupIcon.setIcon(new ImageIcon(getHighQualityScaledImage(pulseGroupImg, groupSize, groupSize)));
-
-        ecgPanel.setBounds(pulseX, pulseY + pulseH + 5, rightSize, 80);
-
         int stopW = 140;
         int stopH = 60;
         stopBtn.setBounds(w - stopW - 30, h - stopH - 40, stopW, stopH);
@@ -545,55 +530,8 @@ public class KMHM_MainUI extends JFrame {
 
     class GraphPanel extends JPanel {
         private final LinkedList<Integer> waveform = new LinkedList<>();
-        private final Timer timer;
         private final Random rand = new Random();
         private int t = 0;
-
-        public GraphPanel() {
-            setOpaque(true);
-            setBackground(new Color(10, 20, 30));
-            timer = new Timer(30, e -> {
-                if (waveform.size() >= getWidth())
-                    waveform.removeFirst();
-                waveform.add(generateWaveformPoint());
-                repaint();
-            });
-            timer.start();
-        }
-
-        private int generateWaveformPoint() {
-            t++;
-            int height = getHeight();
-            int base = height / 2;
-            int spike = 0;
-            if (t % 90 == 0)
-                spike = -30;
-            else if (t % 150 == 0)
-                spike = 35;
-            else if (t % 200 == 0)
-                spike = -20;
-            double sin = Math.sin(t * 0.2) * height * 0.25;
-            double noise = rand.nextGaussian() * 4;
-            return (int) (base + sin + noise + spike);
-        }
-
-        protected void paintComponent(Graphics g) {
-            super.paintComponent(g);
-            int width = getWidth();
-            int height = getHeight();
-            g.setColor(new Color(50, 65, 80));
-            for (int x = 0; x < width; x += 20)
-                g.drawLine(x, 0, x, height);
-            for (int y = 0; y < height; y += 20)
-                g.drawLine(0, y, width, y);
-            g.setColor(Color.GREEN);
-            int prevY = waveform.size() > 0 ? waveform.get(0) : height / 2;
-            for (int i = 1; i < waveform.size(); i++) {
-                int y = waveform.get(i);
-                g.drawLine(i - 1, prevY, i, y);
-                prevY = y;
-            }
-        }
     }
 
     public static void main(String[] args) {
