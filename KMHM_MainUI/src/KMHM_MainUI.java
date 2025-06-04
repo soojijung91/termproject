@@ -3,7 +3,10 @@ import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Random;
 import javax.swing.*;
 
@@ -63,17 +66,22 @@ public class KMHM_MainUI extends JFrame {
         groupWave = new JLabel();
         rightComponents = new JLabel();
         stopBtn = new JLabel();
+
+        stopBtn.setIcon(new ImageIcon(getHighQualityScaledImage(stopImg, 140, 60)));
+        stopBtn.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                dispose();
+            }
+        });
+
         lungImg = new JLabel();
         brainImg = new JLabel();
         digestiveImg = new JLabel();
         pulseRateLabel = new JLabel();
         pulseGroupIcon = new JLabel();
 
-        btnCirculatory = createImageButton(getClass().getResource("CirculatoryMG.png").getPath(), () -> new CirculatoryGame());
-        btnDigestive = createImageButton(getClass().getResource("DigestiveMG.png").getPath(), () -> new DigestiveMiniGame());
-        btnNervous = createImageButton(getClass().getResource("NervousMG.png").getPath(), () -> new NervousSystemGame());
-        btnRespiratory = createImageButton(getClass().getResource("RespiratoryMG.png").getPath(), () -> new respiratory());
-
+        
 
         centerClockLabel = new JLabel("00:00", SwingConstants.CENTER);
         centerClockLabel.setForeground(Color.GREEN);
@@ -118,24 +126,22 @@ public class KMHM_MainUI extends JFrame {
             bars[i].setStringPainted(true);  // 문자열 표시 활성화
             percentLabels[i].setText("--%");  // (percentLabels는 게이지 옆에 별도 텍스트라면 그대로 둬도 OK)
         }
-
-
-        decayTimer = new Timer(2000, e -> {
-            for (int i = 0; i < 4; i++) {
-                int val = bars[i].getValue();
-                if (val > 0) {
-                    bars[i].setValue(val - 1);
-                    percentLabels[i].setText((val - 1) + "%");
-                }
-            }
-            checkGameStatus();
-        });
-        decayTimer.start();
-        for (int i = 0; i < 4; i++) {
-            triggerClicks[i] = 1 + random.nextInt(8); // 1~8 중 무작위 시점
-        }
-
-
+        /*
+         * decayTimer = new Timer(2000, e -> {
+         * for (int i = 0; i < 4; i++) {
+         * int val = bars[i].getValue();
+         * if (val > 0) {
+         * bars[i].setValue(val - 1);
+         * percentLabels[i].setText((val - 1) + "%");
+         * }
+         * }
+         * checkGameStatus();
+         * });
+         * decayTimer.start();
+         * for (int i = 0; i < 4; i++) {
+         * triggerClicks[i] = 1 + random.nextInt(8); // 1~8 중 무작위 시점
+         * }
+         */
         centerClockTimer = new Timer(1000, e -> {
             elapsedSeconds++;
             int min = elapsedSeconds / 60;
@@ -157,10 +163,19 @@ public class KMHM_MainUI extends JFrame {
         add(digestiveImg);
         add(human);
         add(background);
-        add(btnCirculatory);
-        add(btnDigestive);
-        add(btnNervous);
-        add(btnRespiratory);
+
+        // 미니게임 아이콘용 패널 (2x2 배열)
+        JPanel miniGamePanel = new JPanel(new GridLayout(2, 2, 20, 20));
+        miniGamePanel.setOpaque(false); // 배경 투명
+        miniGamePanel.setBounds(100, 850, 600, 150); // 위치 조절 필요 시 수정
+
+        miniGamePanel.add(createImageButton("CirculatoryMG.png", () -> new CirculatoryGame()));
+        miniGamePanel.add(createImageButton("DigestiveMG.png", () -> new DigestiveMiniGame()));
+        miniGamePanel.add(createImageButton("NervousMG.png", () -> new NervousSystemGame()));
+        miniGamePanel.add(createImageButton("RespiratoryMG.png", () -> new respiratory()));
+
+        add(miniGamePanel); // 또는 add(miniGamePanel)도 가능
+
 
 
         human.addMouseListener(new MouseAdapter() {
@@ -189,6 +204,38 @@ public class KMHM_MainUI extends JFrame {
     private int[] clickCounts = new int[4];
     private int[] triggerClicks = new int[4];
     private Random random = new Random();
+
+    // 미션 추천 배열 (각 시스템별 5~6개 예시)
+    private final String[][] missionRecommends = {
+        { // Nervous System
+            "매일 7시간 이상 숙면하기",
+            "자기 전 30분 스마트폰 사용 줄이기",
+            "명상 또는 심호흡 5분 실천",
+            "스트레스 받을 때 산책하기",
+            "하루 1회 긍정적인 자기 대화하기"
+        },
+        { // Respiratory System
+            "하루 3번 이상 환기하기",
+            "미세먼지 심한 날 마스크 착용하기",
+            "주 3회 이상 유산소 운동하기",
+            "금연 또는 간접흡연 피하기",
+            "실내 공기청정기 사용하기"
+        },
+        { // Digestive System
+            "식사시간 규칙적으로 지키기",
+            "하루 1.5L 이상 물 마시기",
+            "야식 줄이기",
+            "채소, 과일 충분히 섭취하기",
+            "폭식하지 않기"
+        },
+        { // Circulatory System
+            "주 3회 이상 걷기/조깅하기",
+            "짠 음식 줄이기",
+            "정기적으로 혈압 측정하기",
+            "하루 30분 스트레칭하기",
+            "가족과 건강 정보 공유하기"
+        }
+    };
 
 
     
@@ -388,6 +435,19 @@ public class KMHM_MainUI extends JFrame {
             );
             JOptionPane.showMessageDialog(this, msg, systemNames[index] + " 설문 결과", JOptionPane.INFORMATION_MESSAGE);
 
+            // ---- 2. 목표 추천이 그 다음에 ----
+            String[] recommendSet = missionRecommends[index];
+            List<String> missions = new ArrayList<>(Arrays.asList(recommendSet));
+
+            java.util.Collections.shuffle(missions);
+            int count = Math.min(3, missions.size());
+            StringBuilder goalMsg = new StringBuilder();
+            goalMsg.append("오늘의 추천 건강 목표\n\n");
+            for (int i = 0; i < count; i++) {
+                goalMsg.append("• ").append(missions.get(i)).append("\n");
+            }
+            JOptionPane.showMessageDialog(this, goalMsg.toString(), "실천 목표", JOptionPane.INFORMATION_MESSAGE);
+
         } else {
             JOptionPane.showMessageDialog(this, "답변을 건너뛰셨습니다.", "알림", JOptionPane.WARNING_MESSAGE);
         }
@@ -573,14 +633,16 @@ public class KMHM_MainUI extends JFrame {
     public static void main(String[] args) {
         new KMHM_MainUI();
     }
-    private JButton createImageButton(String imagePath, Runnable action) {
-        ImageIcon icon = new ImageIcon(imagePath);
-        Image img = icon.getImage().getScaledInstance(100, 100, Image.SCALE_SMOOTH);
-        JButton button = new JButton(new ImageIcon(img));
-        button.setBorderPainted(false);
-        button.setContentAreaFilled(false);
-        button.setFocusPainted(false);
-        button.addActionListener(e -> action.run());
-        return button;
+
+private JButton createImageButton(String imagePath, Runnable action) {
+    ImageIcon icon = new ImageIcon(imagePath);
+    JButton button = new JButton(icon);
+    button.setContentAreaFilled(false);
+    button.setBorderPainted(false);
+    button.setFocusPainted(false);
+    button.addActionListener(e -> action.run());
+    return button;
     }
 }
+
+
