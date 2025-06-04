@@ -103,7 +103,7 @@ public class KMHM_MainUI extends JFrame {
             bars[i].setStringPainted(true); // 문자열 표시 활성화
             percentLabels[i].setText("--%"); // (percentLabels는 게이지 옆에 별도 텍스트라면 그대로 둬도 OK)
         }
-
+/*
         decayTimer = new Timer(2000, e -> {
             for (int i = 0; i < 4; i++) {
                 int val = bars[i].getValue();
@@ -118,7 +118,7 @@ public class KMHM_MainUI extends JFrame {
         for (int i = 0; i < 4; i++) {
             triggerClicks[i] = 1 + random.nextInt(8); // 1~8 중 무작위 시점
         }
-
+*/
         centerClockTimer = new Timer(1000, e -> {
             elapsedSeconds++;
             int min = elapsedSeconds / 60;
