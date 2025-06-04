@@ -9,12 +9,10 @@
       <sourceFolder url="file://$MODULE_DIR$/KMHM_MainUI/src/img" type="java-resource" />
       <sourceFolder url="file://$MODULE_DIR$/KMHM_MainUI/termproject" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/KMHM_MainUI/termproject/mg--nervous/src/assets" type="java-resource" />
-      <sourceFolder url="file://$MODULE_DIR$/KMHM_MainUI/termproject/mg-circulatory/asset" type="java-resource" />
-      <sourceFolder url="file://$MODULE_DIR$/KMHM_MainUI/termproject/mg-digestive/asset" type="java-resource" />
-      <sourceFolder url="file://$MODULE_DIR$/KMHM_MainUI/termproject/mg-respiratory/asset" type="java-resource" />
       <sourceFolder url="file://$MODULE_DIR$/production/termproject/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/production/termproject/termproject/mg--nervous/src/assets" type="java-resource" />
       <sourceFolder url="file://$MODULE_DIR$/KMHM_MainUI/termproject/mg--nervous/src" isTestSource="false" />
+      <excludeFolder url="file://$MODULE_DIR$/KMHM_MainUI/termproject/mg-circulatory/asset" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
