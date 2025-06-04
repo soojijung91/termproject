@@ -1,8 +1,6 @@
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
 import java.util.*;
 import javax.swing.*;
 
@@ -68,9 +66,9 @@ public class KMHM_MainUI extends JFrame {
         groupImg = new ImageIcon(getClass().getResource("/img/Group.png")).getImage();
         rightImg = new ImageIcon(getClass().getResource("/img/RightComponents.png")).getImage();
         stopImg = new ImageIcon(getClass().getResource("/img/CTA.png")).getImage();
-        lungRaw = new ImageIcon(getClass().getResource("/img/폐이미지.png")).getImage();
-        brainRaw = new ImageIcon(getClass().getResource("/img/신경계이미지.png")).getImage();
-        digestiveRaw = new ImageIcon(getClass().getResource("/img/소화계이미지.png")).getImage();
+        lungRaw = new ImageIcon(getClass().getResource("/img/lungimage.png")).getImage();
+        brainRaw = new ImageIcon(getClass().getResource("/img/nervousImage.png")).getImage();
+        digestiveRaw = new ImageIcon(getClass().getResource("/img/digestiveImage.png")).getImage();
         pulseRateImg = new ImageIcon(getClass().getResource("/img/PulseRate.png")).getImage();
         pulseGroupImg = new ImageIcon(getClass().getResource("/img/Group-1.png")).getImage();
 
@@ -91,13 +89,7 @@ public class KMHM_MainUI extends JFrame {
         centerClockLabel = new JLabel("00:00", SwingConstants.CENTER);
         centerClockLabel.setForeground(Color.GREEN);
         centerClockLabel.setOpaque(false);
-        try {
-            Font digitalFont = Font.createFont(Font.TRUETYPE_FONT, new File("src/fonts/digital-7.ttf")).deriveFont(36f);
-            centerClockLabel.setFont(digitalFont);
-        } catch (FontFormatException | IOException e) {
-            centerClockLabel.setFont(new Font("Dialog", Font.BOLD, 33));
-            System.err.println("폰트를 불러오는 데 실패했습니다: " + e.getMessage());
-        }
+      
 
         add(centerClockLabel);
         add(pulseRateLabel);
@@ -377,10 +369,10 @@ public class KMHM_MainUI extends JFrame {
             percentLabels[i].setBounds(marginX + usableWidth - 50, y + labelHeight + 2, 50, barHeight);
         }
 
-        btnCirculatory.setBounds(startX, startY, btnSize, btnSize);
-        btnDigestive.setBounds(startX + btnSize + 20, startY, btnSize, btnSize);
-        btnNervous.setBounds(startX, startY + btnSize + 20, btnSize, btnSize);
-        btnRespiratory.setBounds(startX + btnSize + 20, startY + btnSize + 20, btnSize, btnSize);
+        this.btnCirculatory.setBounds(startX, startY, btnSize, btnSize);
+        this.btnDigestive.setBounds(startX + btnSize + 20, startY, btnSize, btnSize);
+        this.btnNervous.setBounds(startX, startY + btnSize + 20, btnSize, btnSize);
+        this.btnRespiratory.setBounds(startX + btnSize + 20, startY + btnSize + 20, btnSize, btnSize);
         background.setBounds(0, 0, w, h);
         background.setIcon(new ImageIcon(getHighQualityScaledImage(bgImg, w, h)));
 
