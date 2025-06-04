@@ -57,6 +57,15 @@ public class KMHM_MainUI extends JFrame {
         groupWave = new JLabel();
         rightComponents = new JLabel();
         stopBtn = new JLabel();
+
+        stopBtn.setIcon(new ImageIcon(getHighQualityScaledImage(stopImg, 140, 60)));
+        stopBtn.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                dispose();
+            }
+        });
+
         lungImg = new JLabel();
         brainImg = new JLabel();
         digestiveImg = new JLabel();
@@ -103,22 +112,22 @@ public class KMHM_MainUI extends JFrame {
             bars[i].setStringPainted(true); // 문자열 표시 활성화
             percentLabels[i].setText("--%"); // (percentLabels는 게이지 옆에 별도 텍스트라면 그대로 둬도 OK)
         }
-/*
-        decayTimer = new Timer(2000, e -> {
-            for (int i = 0; i < 4; i++) {
-                int val = bars[i].getValue();
-                if (val > 0) {
-                    bars[i].setValue(val - 1);
-                    percentLabels[i].setText((val - 1) + "%");
-                }
-            }
-            checkGameStatus();
-        });
-        decayTimer.start();
-        for (int i = 0; i < 4; i++) {
-            triggerClicks[i] = 1 + random.nextInt(8); // 1~8 중 무작위 시점
-        }
-*/
+        /*
+         * decayTimer = new Timer(2000, e -> {
+         * for (int i = 0; i < 4; i++) {
+         * int val = bars[i].getValue();
+         * if (val > 0) {
+         * bars[i].setValue(val - 1);
+         * percentLabels[i].setText((val - 1) + "%");
+         * }
+         * }
+         * checkGameStatus();
+         * });
+         * decayTimer.start();
+         * for (int i = 0; i < 4; i++) {
+         * triggerClicks[i] = 1 + random.nextInt(8); // 1~8 중 무작위 시점
+         * }
+         */
         centerClockTimer = new Timer(1000, e -> {
             elapsedSeconds++;
             int min = elapsedSeconds / 60;
@@ -324,7 +333,6 @@ public class KMHM_MainUI extends JFrame {
         @SuppressWarnings("unchecked")
         JComboBox<String>[] fields = new JComboBox[5];
 
-
         for (int i = 0; i < 5; i++) {
             panel.add(new JLabel(questions[index][i]));
             fields[i] = new JComboBox<>(options[index][i]);
@@ -411,7 +419,8 @@ public class KMHM_MainUI extends JFrame {
             JOptionPane.showMessageDialog(this, msg, systemNames[index] + " 설문 결과", JOptionPane.INFORMATION_MESSAGE);
 
             // ---- 2. 목표 추천이 그 다음에 ----
-            java.util.List<String> missions = new java.util.ArrayList<>(java.util.Arrays.asList(missionRecommends[index]));
+            java.util.List<String> missions = new java.util.ArrayList<>(
+                    java.util.Arrays.asList(missionRecommends[index]));
             java.util.Collections.shuffle(missions);
             int count = Math.min(3, missions.size());
             StringBuilder goalMsg = new StringBuilder();
@@ -424,8 +433,6 @@ public class KMHM_MainUI extends JFrame {
         } else {
             JOptionPane.showMessageDialog(this, "답변을 건너뛰셨습니다.", "알림", JOptionPane.WARNING_MESSAGE);
         }
-
-
 
         checkGameStatus();
     }
