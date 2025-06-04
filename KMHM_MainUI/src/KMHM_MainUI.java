@@ -99,24 +99,13 @@ public class KMHM_MainUI extends JFrame {
             add(bars[i]);
         }
 
-        Random rand = new Random();
-        int[] indices = { 0, 1, 2, 3 };
-        for (int i = 0; i < indices.length; i++) {
-            int j = rand.nextInt(indices.length);
-            int temp = indices[i];
-            indices[i] = indices[j];
-            indices[j] = temp;
+        for (int i = 0; i < 4; i++) {
+            bars[i].setValue(0);
+            bars[i].setString("--");         // 게이지바 안에 "--"로 표시
+            bars[i].setStringPainted(true);  // 문자열 표시 활성화
+            percentLabels[i].setText("--%");  // (percentLabels는 게이지 옆에 별도 텍스트라면 그대로 둬도 OK)
         }
-        for (int i = 0; i < 2; i++) {
-            int val = 20 + rand.nextInt(11);
-            bars[indices[i]].setValue(val);
-            percentLabels[indices[i]].setText(val + "%");
-        }
-        for (int i = 2; i < 4; i++) {
-            int val = 40 + rand.nextInt(11);
-            bars[indices[i]].setValue(val);
-            percentLabels[indices[i]].setText(val + "%");
-        }
+
 
         decayTimer = new Timer(2000, e -> {
             for (int i = 0; i < 4; i++) {
@@ -185,117 +174,120 @@ public class KMHM_MainUI extends JFrame {
 
 
     private void checkGameStatus() {
-        if (gameOverShown)
-            return;
-
-        boolean allAbove80 = true;
-        for (JProgressBar bar : bars) {
-            int value = bar.getValue();
-            if (value <= 0) {
-                gameOverShown = true;
-                new GameOverFrame(centerClockLabel.getText());
-                dispose();
-                return;
-            }
-            if (value < 80) {
-                allAbove80 = false;
-            }
-        }
-        if (allAbove80) {
-            gameOverShown = true;
-            new GameClearFrame(centerClockLabel.getText());
-            dispose();
-        }
     }
     private void updateGauge(int index, int increment, String feedbackMsg) {
         int val = bars[index].getValue();
         val = Math.min(100, val + increment);
         bars[index].setValue(val);
+        bars[index].setString(null);
         percentLabels[index].setText(val + "%");
 
         JOptionPane.showMessageDialog(this, feedbackMsg, systemNames[index] + " 피드백", JOptionPane.INFORMATION_MESSAGE);
     }
 
     private void increase(int index) {
-        // 각 시스템별 질문, 선택지, 점수
         String[][] questions = {
                 // Nervous System
                 {
                         "1. 하루 평균 수면 시간은 몇 시간인가요?",
                         "2. 최근 일주일 동안 스트레스를 많이 받았나요?",
-                        "3. 자기 전에 전자기기(스마트폰, 컴퓨터 등)를 얼마나 사용하나요?"
+                        "3. 자기 전에 전자기기(스마트폰, 컴퓨터 등)를 얼마나 사용하나요?",
+                        "4. 평소 마음을 안정시키는 활동이 있나요?",
+                        "5. 최근 우울감을 느낀 적이 있나요?"
                 },
                 // Respiratory System
                 {
                         "1. 하루에 얼마나 자주 환기를 시키시나요?",
                         "2. 운동 중 숨이 차거나 호흡 곤란을 느낀 적이 있나요?",
-                        "3. 최근 감기, 기침 또는 인후통 등의 증상이 있었나요?"
+                        "3. 최근 감기, 기침 또는 인후통 등의 증상이 있었나요?",
+                        "4. 미세먼지 심한 날 외출 시 마스크를 착용하나요?",
+                        "5. 최근 흡연 또는 간접흡연 경험이 있나요?"
                 },
                 // Digestive System
                 {
                         "1. 평소 식사 시간을 규칙적으로 지키시나요?",
                         "2. 일주일에 몇 번 외식을 하나요?",
-                        "3. 변비나 복부 불편감을 자주 느끼시나요?"
+                        "3. 변비나 복부 불편감을 자주 느끼시나요?",
+                        "4. 평소 야식이나 폭식을 하나요?",
+                        "5. 물을 충분히 마시나요?"
                 },
                 // Circulatory System
                 {
                         "1. 평소 혈압을 측정한 적이 있나요?",
                         "2. 일주일에 몇 번 정도 유산소 운동(걷기, 조깅 등)을 하시나요?",
-                        "3. 짠 음식이나 기름진 음식을 자주 드시나요?"
+                        "3. 짠 음식이나 기름진 음식을 자주 드시나요?",
+                        "4. 최근 체중 변화를 느끼셨나요?",
+                        "5. 가족 중 고혈압이나 심장 질환 병력이 있나요?"
                 }
         };
 
         String[][][] options = {
                 { // Nervous System
-                        {"7~8시간", "6시간", "5시간 이하"},
-                        {"아니오", "보통", "예"},
-                        {"1시간 전 끔", "10분 전", "계속 사용"}
+                        {"7~8시간", "6시간", "5시간", "4시간", "4시간 미만"},
+                        {"아니오", "보통", "가끔", "자주", "매우 자주"},
+                        {"1시간 전 끔", "30분 전", "10분 전", "잠들 때까지 사용", "계속 사용"},
+                        {"있다(규칙적)", "가끔 있다", "거의 없다", "전혀 없다", "모름"},
+                        {"없다", "거의 없다", "가끔", "자주", "매우 자주"}
                 },
                 { // Respiratory System
-                        {"3번 이상", "1~2번", "없음"},
-                        {"없음", "가끔 있음", "자주 있음"},
-                        {"없음", "최근 있음", "지금도 있음"}
+                        {"3번 이상", "2번", "1번", "가끔", "전혀 없음"},
+                        {"없음", "거의 없음", "가끔 있음", "자주 있음", "매우 자주 있음"},
+                        {"없음", "한 번", "두 번", "세 번 이상", "지금도 있음"},
+                        {"항상 착용", "대부분 착용", "가끔 착용", "거의 안 함", "전혀 안 함"},
+                        {"없음", "거의 없음", "가끔", "자주", "매우 자주"}
                 },
                 { // Digestive System
-                        {"항상", "가끔", "불규칙"},
-                        {"주 1~2회", "주 3~4회", "거의 매일"},
-                        {"없음", "가끔 있음", "자주 있음"}
+                        {"항상", "대부분", "가끔", "거의 없음", "불규칙"},
+                        {"없음", "주 1~2회", "주 3~4회", "주 5회 이상", "매일"},
+                        {"없음", "거의 없음", "가끔 있음", "자주 있음", "매우 자주 있음"},
+                        {"없음", "거의 없음", "가끔", "자주", "매우 자주"},
+                        {"1.5L 이상", "1L 이상", "0.5~1L", "0.5L 미만", "거의 안 마심"}
                 },
                 { // Circulatory System
-                        {"주기적으로 측정", "가끔", "없음"},
-                        {"주 3회 이상", "주 1~2회", "없음"},
-                        {"거의 안 먹음", "가끔 먹음", "자주 먹음"}
+                        {"주기적으로 측정", "가끔", "1~2번", "거의 없음", "전혀 없음"},
+                        {"주 5회 이상", "주 3~4회", "주 1~2회", "가끔", "전혀 없음"},
+                        {"거의 안 먹음", "가끔 먹음", "보통", "자주 먹음", "매우 자주 먹음"},
+                        {"없음", "1~2kg 증가", "1~2kg 감소", "3kg 이상 변화", "모름"},
+                        {"없음", "잘 모름", "먼 친척", "직계 가족 중 1명", "직계 가족 2명 이상"}
                 }
         };
 
         int[][][] scores = {
                 { // Nervous System
-                        {10, 7, 3},
-                        {10, 5, 0},
-                        {10, 5, 0}
+                        {10, 8, 6, 3, 0},
+                        {10, 8, 6, 3, 0},
+                        {10, 8, 6, 3, 0},
+                        {10, 8, 6, 3, 0},
+                        {10, 8, 6, 3, 0}
                 },
                 { // Respiratory System
-                        {10, 5, 0},
-                        {10, 5, 0},
-                        {10, 5, 0}
+                        {10, 8, 6, 3, 0},
+                        {10, 8, 6, 3, 0},
+                        {10, 8, 6, 3, 0},
+                        {10, 8, 6, 3, 0},
+                        {10, 8, 6, 3, 0}
                 },
                 { // Digestive System
-                        {10, 5, 0},
-                        {10, 5, 0},
-                        {10, 5, 0}
+                        {10, 8, 6, 3, 0},
+                        {10, 8, 6, 3, 0},
+                        {10, 8, 6, 3, 0},
+                        {10, 8, 6, 3, 0},
+                        {10, 8, 6, 3, 0}
                 },
                 { // Circulatory System
-                        {10, 5, 0},
-                        {10, 5, 0},
-                        {10, 5, 0}
+                        {10, 8, 6, 3, 0},
+                        {10, 8, 6, 3, 0},
+                        {10, 8, 6, 3, 0},
+                        {10, 8, 6, 3, 0},
+                        {10, 8, 6, 3, 0}
                 }
         };
 
-        // 입력 패널
         JPanel panel = new JPanel(new GridLayout(0, 2, 5, 8));
-        JComboBox<String>[] fields = new JComboBox[3];
+        @SuppressWarnings("unchecked")
+        JComboBox<String>[] fields = new JComboBox[5];
 
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i < 5; i++) {
             panel.add(new JLabel(questions[index][i]));
             fields[i] = new JComboBox<>(options[index][i]);
             panel.add(fields[i]);
@@ -307,55 +299,83 @@ public class KMHM_MainUI extends JFrame {
 
         if (result == JOptionPane.OK_OPTION) {
             int totalScore = 0;
-            for (int i = 0; i < 3; i++) {
+            for (int i = 0; i < 5; i++) {
                 int selIdx = fields[i].getSelectedIndex();
                 totalScore += scores[index][i][selIdx];
             }
 
-            // 점수구간별 게이지 변화량, 피드백 결정
-            int gaugeDelta;
+            int gaugePercent;
             String feedbackMsg;
-            if (totalScore >= 25) {
-                gaugeDelta = 10;
-            } else if (totalScore >= 15) {
-                gaugeDelta = 5;
+
+            // 5구간 (0~24, 25~34, 35~39, 40~44, 45~50)
+            if (totalScore >= 45) {
+                gaugePercent = 100;
+            } else if (totalScore >= 40) {
+                gaugePercent = 80;
+            } else if (totalScore >= 35) {
+                gaugePercent = 60;
+            } else if (totalScore >= 25) {
+                gaugePercent = 40;
             } else {
-                gaugeDelta = -10;
+                gaugePercent = 20;
             }
-            // 시스템별 상세 피드백
+
             String[][] feedbacks = {
                     {
-                            "충분한 수면과 스트레스 관리, 올바른 스마트폰 사용 습관까지! 신경계 건강이 매우 우수합니다.",
-                            "평균 이상의 습관이지만, 수면시간이나 스트레스 해소에 조금 더 신경 쓰면 더 좋겠어요.",
-                            "수면, 스트레스, 스마트폰 사용 습관을 점검해 보세요. 신경계 건강 개선이 필요해요!"
+                            "정말 훌륭해요! 신경계 건강이 완벽합니다.",
+                            "아주 좋네요. 조금만 더 신경쓰면 완벽해요.",
+                            "보통입니다. 생활습관을 점검해보세요.",
+                            "다소 주의가 필요해요. 개선이 필요합니다.",
+                            "위험 신호! 반드시 관리하세요."
                     },
                     {
-                            "적절한 환기, 운동, 감기 예방까지! 호흡기 건강이 아주 좋습니다.",
-                            "호흡기 건강을 잘 관리하고 있지만, 환기나 운동 습관을 조금만 더 챙기면 좋아요.",
-                            "호흡기 건강이 걱정돼요. 환기·운동 습관을 다시 한번 점검해 보세요!"
+                            "호흡기 건강이 매우 좋습니다. 앞으로도 꾸준히 관리해 주세요.",
+                            "전반적으로 좋으나, 미세먼지 등 환경에도 신경 써주세요.",
+                            "보통입니다. 운동, 환기에 신경 써주세요.",
+                            "주의가 필요합니다. 호흡기 건강을 점검해보세요.",
+                            "경고! 호흡기 건강 개선이 꼭 필요합니다."
                     },
                     {
-                            "식습관이 매우 규칙적이고, 소화기 건강도 아주 우수합니다!",
-                            "소화기 건강을 잘 관리하고 있지만, 식사시간이나 외식 빈도를 조금 더 신경 써보세요.",
-                            "소화기 건강에 주의가 필요해요. 규칙적인 식사와 적당한 외식이 중요합니다."
+                            "소화기 건강이 아주 우수합니다!",
+                            "좋은 편이나, 식습관을 조금 더 챙기면 더 좋아요.",
+                            "보통입니다. 야식, 폭식 등을 점검해 보세요.",
+                            "소화기 건강에 주의가 필요합니다.",
+                            "경고! 식습관 개선이 시급합니다."
                     },
                     {
-                            "혈압 관리, 운동, 식습관까지! 순환기 건강이 매우 우수해요.",
-                            "순환기 건강이 나쁘진 않지만, 더 규칙적인 운동과 식단이 필요해 보입니다.",
-                            "순환기 건강에 빨간불! 혈압 측정과 운동, 식습관 개선을 시작해 보세요."
+                            "순환기 건강이 매우 우수해요.",
+                            "아주 좋지만, 운동이나 식단에 조금 더 신경 써주세요.",
+                            "보통입니다. 가족력 등 점검 필요.",
+                            "주의! 체중, 혈압 등 관리 필요합니다.",
+                            "경고! 순환기 건강에 심각한 위험이 있습니다."
                     }
             };
-
-            int fbIdx = (totalScore >= 25) ? 0 : (totalScore >= 15) ? 1 : 2;
+            int fbIdx;
+            if (totalScore >= 45) fbIdx = 0;
+            else if (totalScore >= 40) fbIdx = 1;
+            else if (totalScore >= 35) fbIdx = 2;
+            else if (totalScore >= 25) fbIdx = 3;
+            else fbIdx = 4;
             feedbackMsg = feedbacks[index][fbIdx];
 
-            updateGauge(index, gaugeDelta, feedbackMsg);
+            bars[index].setValue(gaugePercent);
+            bars[index].setString(null);
+            percentLabels[index].setText(gaugePercent + "%");
+
+            String msg = String.format(
+                    "점수: %d점\n게이지: %d%%\n\n%s",
+                    totalScore, gaugePercent, feedbackMsg
+            );
+            JOptionPane.showMessageDialog(this, msg, systemNames[index] + " 설문 결과", JOptionPane.INFORMATION_MESSAGE);
+
         } else {
-            updateGauge(index, 0, "답변을 건너뛰셨습니다. 건강 설문에 참여해 주세요!");
+            JOptionPane.showMessageDialog(this, "답변을 건너뛰셨습니다.", "알림", JOptionPane.WARNING_MESSAGE);
         }
 
         checkGameStatus();
     }
+
+
 
 
 
