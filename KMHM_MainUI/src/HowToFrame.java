@@ -1,12 +1,11 @@
 import java.awt.*;
 import javax.swing.*;
-import javax.swing.text.*;
 
 public class HowToFrame extends JFrame {
 
     public HowToFrame() {
-        setTitle("How to Play");
-        setSize(1073, 790); // 💡 게임 창보다 살짝 작은 크기
+        setTitle("User Info");
+        setSize(1073, 790);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLayout(null);
@@ -18,84 +17,76 @@ public class HowToFrame extends JFrame {
         add(background);
 
         // ✅ 제목
-        JLabel titleLabel = new JLabel("How to Play", SwingConstants.CENTER);
+        JLabel titleLabel = new JLabel("환자 정보 입력", SwingConstants.CENTER);
         titleLabel.setFont(new Font("맑은 고딕", Font.BOLD, 50));
         titleLabel.setForeground(Color.WHITE);
         titleLabel.setBounds(150, 50, 800, 60);
         background.add(titleLabel);
 
-        // ✅ 텍스트 영역
-        JTextPane styledText = new JTextPane();
-        styledText.setOpaque(false);
-        styledText.setEditable(false);
-        styledText.setForeground(Color.WHITE);
-        styledText.setFont(new Font("맑은 고딕", Font.PLAIN, 26));
-        styledText.setBounds(100, 140, 900, 540);
+        // ✅ 라벨 및 입력 필드
+        Font labelFont = new Font("맑은 고딕", Font.BOLD, 24);
+        Font fieldFont = new Font("맑은 고딕", Font.PLAIN, 22);
 
-        StyledDocument doc = styledText.getStyledDocument();
+        String[] labels = { "이름", "나이", "성별", "키 (cm)", "몸무게 (kg)" };
+        int y = 160;
+        JTextField nameField = new JTextField();
+        JTextField ageField = new JTextField();
+        JComboBox<String> genderBox = new JComboBox<>(new String[] { "남성", "여성", "기타" });
+        JTextField heightField = new JTextField();
+        JTextField weightField = new JTextField();
 
-        // 스타일
-        SimpleAttributeSet bold = new SimpleAttributeSet();
-        StyleConstants.setFontFamily(bold, "맑은 고딕");
-        StyleConstants.setFontSize(bold, 28);
-        StyleConstants.setBold(bold, true);
-        StyleConstants.setForeground(bold, Color.WHITE);
+        JComponent[] fields = { nameField, ageField, genderBox, heightField, weightField };
 
-        SimpleAttributeSet normal = new SimpleAttributeSet();
-        StyleConstants.setFontFamily(normal, "맑은 고딕");
-        StyleConstants.setFontSize(normal, 26);
-        StyleConstants.setForeground(normal, Color.WHITE);
+        for (int i = 0; i < labels.length; i++) {
+            JLabel label = new JLabel(labels[i] + ":");
+            label.setFont(labelFont);
+            label.setForeground(Color.WHITE);
+            label.setBounds(250, y, 150, 40);
+            background.add(label);
 
-        try {
-            doc.insertString(doc.getLength(), "게임 개요\n", bold);
-            doc.insertString(doc.getLength(), "KILL ME HILL ME는 환자의 건강 게이지를 관리하여, 환자의 건강을 회복시키는 게임입니다.\n\n", normal);
+            JComponent field = fields[i];
+            field.setFont(fieldFont);
+            field.setBounds(420, y, 300, 40);
+            background.add(field);
 
-            doc.insertString(doc.getLength(), "게임 설명\n", bold);
-            doc.insertString(doc.getLength(), "회복시키고 싶은 게이지에 해당하는 부분을 클릭하면 일정 확률로 미니게임이 생성됩니다.\n", normal);
-            doc.insertString(doc.getLength(), "미니게임 성공 시에 환자의 건강 게이지가 대폭 상승하고, 미니게임 실패 시에 건강 게이지가 감소합니다.\n", normal);
-            doc.insertString(doc.getLength(), "각 게임은 마우스 클릭 또는 키보드 방향키로 조작할 수 있습니다.\n\n", normal);
-
-            doc.insertString(doc.getLength(), "조작법\n", bold);
-            doc.insertString(doc.getLength(), "- 방향키 ← → : 캐릭터 이동\n", normal);
-            doc.insertString(doc.getLength(), "- Spacebar : 폐 부풀리기\n\n", normal);
-
-            doc.insertString(doc.getLength(), "팁\n", bold);
-            doc.insertString(doc.getLength(), "- 모든 장기의 체력을 0으로 만들지 않도록 주의하세요!\n", normal);
-            doc.insertString(doc.getLength(), "- 제한 시간 내 최대한 많은 점수를 획득하세요!\n", normal);
-
-        } catch (BadLocationException e) {
-            e.printStackTrace();
+            y += 70;
         }
 
-        background.add(styledText);
+        // ✅ 확인 버튼
+        JButton submitBtn = new JButton("확인");
+        submitBtn.setFont(new Font("맑은 고딕", Font.BOLD, 24));
+        submitBtn.setBounds(460, 550, 140, 50);
+        submitBtn.setFocusPainted(false);
+        submitBtn.setBackground(Color.WHITE);
+        submitBtn.setForeground(Color.BLACK);
 
-        // ✅ OK 버튼
-        JButton okBtn = new JButton("OK");
-        okBtn.setFont(new Font("맑은 고딕", Font.BOLD, 24));
-        okBtn.setBounds(480, 650, 140, 50);
-        okBtn.setFocusPainted(false);
-        okBtn.setBackground(Color.WHITE);
-        okBtn.setForeground(Color.BLACK);
+        submitBtn.addActionListener(e -> {
+            String name = nameField.getText().trim();
+            String age = ageField.getText().trim();
+            String gender = (String) genderBox.getSelectedItem();
+            String height = heightField.getText().trim();
+            String weight = weightField.getText().trim();
 
-        okBtn.addActionListener(e -> dispose());
+            // 간단한 유효성 검사
+            if (name.isEmpty() || age.isEmpty() || height.isEmpty() || weight.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "모든 항목을 입력해주세요.");
+                return;
+            }
 
-        background.add(okBtn);
+            System.out.println("입력된 정보:");
+            System.out.println("이름: " + name);
+            System.out.println("나이: " + age);
+            System.out.println("성별: " + gender);
+            System.out.println("키: " + height);
+            System.out.println("몸무게: " + weight);
+
+            // TODO: 필요한 로직에 따라 해당 정보를 저장하거나 넘겨주세요
+
+            dispose(); // 창 닫기
+        });
+
+        background.add(submitBtn);
 
         setVisible(true);
     }
 }
-
-/*
- * "HOW TO PLAY\n\n" +
- * "게임 개요: KILL ME HILL ME는 환자의 건강 게이지를 관리하여, 환자의 건강을 회복시키는 게임입니다.\n" +
- * "게임 설명\n" +
- * "회복시키고 싶은 게이지에 해당하는 부분을 클릭하면 일정 확률로 미니게임이 생성됩니다.\n" +
- * "미니게임 성공 시에 환자의 건강 게이지가 대폭 상승하고, 미니게임 실패 시에 건강 게이지가 감소합니다.\n" +
- * "각 게임은 마우스 클릭 또는 키보드 방향키로 조작할 수 있습니다.\n" +
- * "조작법\n" +
- * "- 방향키 ← → : 캐릭터 이동\n" +
- * "- Spacebar : 폐 부풀리기\n" +
- * "팁\n" +
- * "모든 장기의 체력을 0으로 만들지 않도록 주의하세요!\n" +
- * "- 제한 시간 내 최대한 많은 점수를 획득하세요!\n\n"
- */
