@@ -31,7 +31,7 @@ public class DigestiveMiniGame extends JFrame {
         setResizable(true);
 
         try {
-            backgroundImage = new ImageIcon(getClass().getResource("/asset/FrameD.png")).getImage();
+            backgroundImage = new ImageIcon(getClass().getResource("/img/FrameD.png")).getImage();
         } catch (Exception e) {
             e.printStackTrace();
             System.exit(1);

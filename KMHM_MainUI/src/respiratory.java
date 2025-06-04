@@ -28,9 +28,9 @@ public class respiratory extends JPanel implements ActionListener, KeyListener {
         timer.start();
 
         try {
-            lungImage = ImageIO.read(getClass().getResource("lung.png"));
-            targetImage = ImageIO.read(getClass().getResource("target.png"));
-            backgroundImage = new ImageIcon(getClass().getResource("FrameF.png")).getImage();
+            lungImage = ImageIO.read(getClass().getResource("/img/lung.png"));
+            targetImage = ImageIO.read(getClass().getResource("/img/target.png"));
+            backgroundImage = new ImageIcon(getClass().getResource("/img/FrameF.png")).getImage();
         } catch (IOException e) {
             e.printStackTrace();
         }

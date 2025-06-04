@@ -16,6 +16,7 @@ public class HowToFrame extends JFrame {
         background.setLayout(null);
         add(background);
 
+
         // ✅ 제목
         JLabel titleLabel = new JLabel("환자 정보 입력", SwingConstants.CENTER);
         titleLabel.setFont(new Font("맑은 고딕", Font.BOLD, 50));

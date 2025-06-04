@@ -25,10 +25,10 @@ class GamePanel extends JPanel implements ActionListener, KeyListener {
     private Timer countdownTimer;
     private int timeLeft = 20;
 
-    private Image heartImage = new ImageIcon(getClass().getResource("\\asset\\heart.png")).getImage();
-    private Image obstacle1 = new ImageIcon(getClass().getResource("\\asset\\erythrocyte.png")).getImage();
-    private Image obstacle2 = new ImageIcon(getClass().getResource("\\asset\\leukocyte.png")).getImage();
-    private Image background = new ImageIcon(getClass().getResource("\\asset\\FrameC.png")).getImage();
+    private Image heartImage = new ImageIcon(getClass().getResource("\\img\\heart.png")).getImage();
+    private Image obstacle1 = new ImageIcon(getClass().getResource("\\img\\erythrocyte.png")).getImage();
+    private Image obstacle2 = new ImageIcon(getClass().getResource("\\img\\leukocyte.png")).getImage();
+    private Image background = new ImageIcon(getClass().getResource("\\img\\FrameC.png")).getImage();
 
     private final int GAUGE_WIDTH = 300;
     private final int GAUGE_HEIGHT = 20;
