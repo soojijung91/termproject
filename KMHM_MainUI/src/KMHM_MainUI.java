@@ -4,6 +4,9 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
+import javax.swing.*;
+
+
 
 
 public class KMHM_MainUI extends JFrame {
@@ -35,6 +38,12 @@ public class KMHM_MainUI extends JFrame {
     private String[] userFeedbacks = new String[4];
     private java.util.List<String>[] userMissions = new java.util.List[4];
 
+    private JButton btnRespiratory;
+    private JButton btnNervous;
+    private JButton btnDigestive;
+    private JButton btnCirculatory;
+
+
 
     public KMHM_MainUI() {
         setTitle("KMHM - Game Screen");
@@ -43,20 +52,26 @@ public class KMHM_MainUI extends JFrame {
         setLocationRelativeTo(null);
         setLayout(null);
 
+        JButton btnRespiratory = createMiniGameButton("RespiratoryMG.png", ()-> new respiratory(), 50, 400);
+        JButton btnNervous = createMiniGameButton("NervousMG.png", ()-> new NervousSystemGame(), 180, 400);
+        JButton btnDigestive = createMiniGameButton("DigestiveMG.png", () -> new DigestiveMiniGame(), 50, 520);
+        JButton btnCirculatory = createMiniGameButton("CirculatoryMG.png", () -> new CirculatoryGame(), 180, 520);
+
+
 
         // --- 이미지 및 컴포넌트 생성
 
         bgImg = new ImageIcon(getClass().getResource("/img/UIBackground.png")).getImage();
-        humanImg = new ImageIcon(getClass().getResource("/img/3D Illustration.png")).getImage();
+        humanImg = new ImageIcon(getClass().getResource("/img/3DIllustration.png")).getImage();
         scanningImg = new ImageIcon(getClass().getResource("/img/_Scanning_.png")).getImage();
-        timerImg = new ImageIcon(getClass().getResource("/img/Game Timer.png")).getImage();
+        timerImg = new ImageIcon(getClass().getResource("/img/GameTimer.png")).getImage();
         groupImg = new ImageIcon(getClass().getResource("/img/Group.png")).getImage();
-        rightImg = new ImageIcon(getClass().getResource("/img/Right Components.png")).getImage();
+        rightImg = new ImageIcon(getClass().getResource("/img/RightComponents.png")).getImage();
         stopImg = new ImageIcon(getClass().getResource("/img/CTA.png")).getImage();
-        lungRaw = new ImageIcon(getClass().getResource("/img/폐 이미지.png")).getImage();
-        brainRaw = new ImageIcon(getClass().getResource("/img/신경계 이미지.png")).getImage();
-        digestiveRaw = new ImageIcon(getClass().getResource("/img/소화계 이미지.png")).getImage();
-        pulseRateImg = new ImageIcon(getClass().getResource("/img/Pulse Rate.png")).getImage();
+        lungRaw = new ImageIcon(getClass().getResource("/img/폐이미지.png")).getImage();
+        brainRaw = new ImageIcon(getClass().getResource("/img/신경계이미지.png")).getImage();
+        digestiveRaw = new ImageIcon(getClass().getResource("/img/소화계이미지.png")).getImage();
+        pulseRateImg = new ImageIcon(getClass().getResource("/img/PulseRate.png")).getImage();
         pulseGroupImg = new ImageIcon(getClass().getResource("/img/Group-1.png")).getImage();
 
         background = new JLabel();
@@ -73,8 +88,6 @@ public class KMHM_MainUI extends JFrame {
         pulseGroupIcon = new JLabel();
 
         // centerClockLabel 세팅
-
-        
         centerClockLabel = new JLabel("00:00", SwingConstants.CENTER);
         centerClockLabel.setForeground(Color.GREEN);
         centerClockLabel.setOpaque(false);
@@ -184,6 +197,18 @@ public class KMHM_MainUI extends JFrame {
         setVisible(true);
         resizeComponents();
     }
+
+    private JButton createMiniGameButton(String imagePath, Runnable gameLauncher, int x, int y) {
+        JButton button = new JButton(new ImageIcon(getClass().getResource(imagePath)));
+        button.setBounds(x, y, 120, 120);  // 버튼 사이즈 조정 가능
+        button.setContentAreaFilled(false);
+        button.setBorderPainted(false);
+        button.addActionListener(e -> gameLauncher.run());
+        add(button);
+        return button;
+    }
+
+
     private int[] clickCounts = new int[4];
     private int[] triggerClicks = new int[4];
     private Random random = new Random();
@@ -335,14 +360,12 @@ public class KMHM_MainUI extends JFrame {
         int w = getWidth();
         int h = getHeight();
 
-        int btnSize = 100;
-        int startX = 150;
-        int startY = 500;
-
-
         int marginX = 20;
         int usableWidth = (int) (w * 0.28);
-        int spacing = (int) ((h - startY * 2) / 5.0);
+        int startY = 40;
+        int startX = 150;
+        int btnSize = 90;
+        int spacing = (int) ((h - startY * 2) / 9.0);
         int barHeight = 24;
         int labelHeight = 18;
 
@@ -448,14 +471,14 @@ public class KMHM_MainUI extends JFrame {
 
     class GraphPanel extends JPanel {
         private final LinkedList<Integer> waveform = new LinkedList<>();
-        private final Timer timer;
+        private final javax.swing.Timer timer;
         private final Random rand = new Random();
         private int t = 0;
 
         public GraphPanel() {
             setOpaque(true);
             setBackground(new Color(10, 20, 30));
-            timer = new Timer(30, e -> {
+            timer = new javax.swing.Timer(30, e -> {
                 if (waveform.size() >= getWidth())
                     waveform.removeFirst();
                 waveform.add(generateWaveformPoint());
