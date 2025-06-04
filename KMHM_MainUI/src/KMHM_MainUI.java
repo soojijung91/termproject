@@ -186,6 +186,46 @@ public class KMHM_MainUI extends JFrame {
     }
 
     private void increase(int index) {
+        // 설문/장기별로 다양한 추천문구를 많이 추가!
+        String[][] missionRecommends = {
+                { // 신경계
+                        "밤 11시 이전 스마트폰 사용 중단",
+                        "오늘 7시간 이상 자기",
+                        "스트레스 느낄 때 5분간 천천히 숨쉬기",
+                        "취침 30분 전 음악 듣기",
+                        "오후 10시 이후 카페인 음료 피하기",
+                        "마음이 불안할 때 가벼운 산책하기",
+                        "명상 앱 켜고 10분간 마음 집중"
+                },
+                { // 호흡계
+                        "외출 전 미세먼지 수치 체크하고 마스크 챙기기",
+                        "하루 2회 이상 방 환기",
+                        "실내 가습기 사용 혹은 젖은 수건 걸기",
+                        "집안 공기청정기 청소하기",
+                        "오늘은 담배와 먼 거리 유지",
+                        "심호흡 10회 천천히 해보기",
+                        "실내 식물 가까이서 5분간 심호흡"
+                },
+                { // 소화계
+                        "오늘은 야식 금지!",
+                        "아침 식사 꼭 챙기기",
+                        "식사 전후 따뜻한 물 한 잔 마시기",
+                        "하루 채소 반찬 2가지 이상 먹기",
+                        "탄산음료 대신 물 마시기",
+                        "식사 중 천천히 20번 이상 씹기",
+                        "저녁 8시 이후 음식 섭취 줄이기"
+                },
+                { // 순환계
+                        "오늘 20분간 산책하기",
+                        "계단 오르기 3회 실천",
+                        "식사 시 짠 음식 줄이기",
+                        "식후 10분 스트레칭",
+                        "잠깐 일어나서 다리 털기 5회",
+                        "버스 한 정거장 미리 내려 걷기",
+                        "마트에서 저염식 제품 하나 구매해보기"
+                }
+        };
+
         String[][] questions = {
                 // Nervous System
                 {
@@ -287,6 +327,7 @@ public class KMHM_MainUI extends JFrame {
         @SuppressWarnings("unchecked")
         JComboBox<String>[] fields = new JComboBox[5];
 
+
         for (int i = 0; i < 5; i++) {
             panel.add(new JLabel(questions[index][i]));
             fields[i] = new JComboBox<>(options[index][i]);
@@ -349,6 +390,7 @@ public class KMHM_MainUI extends JFrame {
                             "주의! 체중, 혈압 등 관리 필요합니다.",
                             "경고! 순환기 건강에 심각한 위험이 있습니다."
                     }
+
             };
             int fbIdx;
             if (totalScore >= 45) fbIdx = 0;
@@ -368,9 +410,22 @@ public class KMHM_MainUI extends JFrame {
             );
             JOptionPane.showMessageDialog(this, msg, systemNames[index] + " 설문 결과", JOptionPane.INFORMATION_MESSAGE);
 
+            // ---- 2. 목표 추천이 그 다음에 ----
+            java.util.List<String> missions = new java.util.ArrayList<>(java.util.Arrays.asList(missionRecommends[index]));
+            java.util.Collections.shuffle(missions);
+            int count = Math.min(3, missions.size());
+            StringBuilder goalMsg = new StringBuilder();
+            goalMsg.append("오늘의 추천 건강 목표\n\n");
+            for (int i = 0; i < count; i++) {
+                goalMsg.append("• ").append(missions.get(i)).append("\n");
+            }
+            JOptionPane.showMessageDialog(this, goalMsg.toString(), "실천 목표", JOptionPane.INFORMATION_MESSAGE);
+
         } else {
             JOptionPane.showMessageDialog(this, "답변을 건너뛰셨습니다.", "알림", JOptionPane.WARNING_MESSAGE);
         }
+
+
 
         checkGameStatus();
     }
