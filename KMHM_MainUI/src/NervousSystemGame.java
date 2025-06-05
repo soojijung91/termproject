@@ -1,3 +1,4 @@
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -6,7 +7,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 public class NervousSystemGame {
-
     public static void main(String[] args) {
         JFrame frame = new JFrame("신경계 미니게임");
         frame.setContentPane(new NervousGamePanel());
@@ -19,10 +19,10 @@ public class NervousSystemGame {
 
 class NervousGamePanel extends JPanel {
     private final String[] imagePaths = {
-            "/assets/nose_icon_on_background 2.png",
-            "/assets/ear_icon_on_background 3.png",
-            "/assets/lips_icon_on_background 7.png",
-            "/assets/eye_icon_visible 5.png"
+        "/img/nose_icon_on_background 2.png",
+        "/img/ear_icon_on_background 3.png",
+        "/img/lips_icon_on_background 7.png",
+        "/img/eye_icon_visible 5.png"
     };
 
     private final List<CardButton> cardButtons = new ArrayList<>();
@@ -30,9 +30,8 @@ class NervousGamePanel extends JPanel {
     private boolean canClick = false;
     private Image backgroundImage;
 
-    // ⏱️ 게이지 관련 변수
     private int elapsedTime = 0;
-    private final int totalTime = 10000; // 10초
+    private final int totalTime = 10000;
     private Timer gaugeTimer;
 
     public NervousGamePanel() {
@@ -40,7 +39,7 @@ class NervousGamePanel extends JPanel {
         setFocusable(true);
 
         try {
-            backgroundImage = new ImageIcon(getClass().getResource("/assets/FrameN.png")).getImage();
+            backgroundImage = new ImageIcon(getClass().getResource("/img/FrameN.png")).getImage();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -50,7 +49,6 @@ class NervousGamePanel extends JPanel {
         cardPanel.setBounds(100, 200, 800, 500);
         add(cardPanel);
 
-        // 카드 이미지 섞기
         List<String> cardImages = new ArrayList<>();
         for (String path : imagePaths) {
             cardImages.add(path);
@@ -58,7 +56,6 @@ class NervousGamePanel extends JPanel {
         }
         Collections.shuffle(cardImages);
 
-        // 카드 버튼 생성
         for (String path : cardImages) {
             CardButton card = new CardButton(path);
             card.addActionListener(new CardClickHandler(card));
@@ -66,7 +63,6 @@ class NervousGamePanel extends JPanel {
             cardPanel.add(card);
         }
 
-        // 시작 시 3초 공개
         Timer startTimer = new Timer(3000, e -> {
             for (CardButton card : cardButtons) {
                 card.hideImage();
@@ -76,17 +72,13 @@ class NervousGamePanel extends JPanel {
         startTimer.setRepeats(false);
         startTimer.start();
 
-        // ⏱️ 게이지 업데이트 타이머
         gaugeTimer = new Timer(100, e -> {
             elapsedTime += 100;
-            if (elapsedTime >= totalTime) {
-                gaugeTimer.stop();
-            }
+            if (elapsedTime >= totalTime) gaugeTimer.stop();
             repaint();
         });
         gaugeTimer.start();
 
-        // ⏲️ 게임 제한 타이머
         Timer gameTimer = new Timer(totalTime, e -> {
             boolean allMatched = cardButtons.stream().allMatch(CardButton::isMatched);
             if (!allMatched) {
@@ -101,11 +93,8 @@ class NervousGamePanel extends JPanel {
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-
-        // 🧠 배경 이미지
         g.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), this);
 
-        // ⏱️ 시간 제한 게이지 바
         int barWidth = 400;
         int barHeight = 20;
         int barX = getWidth() / 2 - barWidth / 2;
@@ -115,18 +104,17 @@ class NervousGamePanel extends JPanel {
         g.fillRect(barX, barY, barWidth, barHeight);
 
         int filledWidth = (int) ((1 - (elapsedTime / (double) totalTime)) * barWidth);
-        g.setColor(new Color(0, 255, 255)); // 형광 파랑
+        g.setColor(new Color(0, 255, 255));
         g.fillRect(barX, barY, filledWidth, barHeight);
 
         g.setColor(Color.BLACK);
         g.drawRect(barX, barY, barWidth, barHeight);
-        int timeLeftSec = Math.max(0, (totalTime - elapsedTime) / 1000); // 초 단위로 변환
+        int timeLeftSec = Math.max(0, (totalTime - elapsedTime) / 1000);
         g.setColor(Color.WHITE);
         g.setFont(new Font("맑은 고딕", Font.BOLD, 20));
         g.drawString("Time Left: " + timeLeftSec + "s", barX, barY + barHeight + 25);
     }
 
-    // 카드 클릭 처리 핸들러
     private class CardClickHandler implements ActionListener {
         private final CardButton card;
 
@@ -148,11 +136,9 @@ class NervousGamePanel extends JPanel {
                     if (card.getImagePath().equals(firstSelected.getImagePath())) {
                         card.setMatched(true);
                         firstSelected.setMatched(true);
-
-                        boolean allMatched = cardButtons.stream().allMatch(CardButton::isMatched);
-                        if (allMatched) {
+                        if (cardButtons.stream().allMatch(CardButton::isMatched)) {
                             JOptionPane.showMessageDialog(null, "✅ Game Clear!", "성공", JOptionPane.INFORMATION_MESSAGE);
-                            System.exit(0); // 게임 성공 후 종료
+                            System.exit(0);
                         }
                     } else {
                         card.hideImage();
@@ -168,7 +154,6 @@ class NervousGamePanel extends JPanel {
     }
 }
 
-// 🃏 카드 클래스
 class CardButton extends JButton {
     private final String imagePath;
     private final ImageIcon front;
@@ -180,28 +165,24 @@ class CardButton extends JButton {
 
     public CardButton(String imagePath) {
         this.imagePath = imagePath;
-
         this.front = new ImageIcon(new ImageIcon(getClass().getResource(imagePath))
                 .getImage().getScaledInstance(width, height, Image.SCALE_SMOOTH));
-        this.back = new ImageIcon(new ImageIcon(getClass().getResource("/assets/Rectangle 632.png"))
+        this.back = new ImageIcon(new ImageIcon(getClass().getResource("/img/Rectangle632.png"))
                 .getImage().getScaledInstance(width, height, Image.SCALE_SMOOTH));
-
-        setIcon(front); // 처음엔 공개
+        setIcon(front);
         setBorderPainted(false);
         setFocusPainted(false);
         setContentAreaFilled(false);
     }
 
+    public void hideImage() {
+        setIcon(back);
+        revealed = false;
+    }
+
     public void revealImage() {
         setIcon(front);
         revealed = true;
-    }
-
-    public void hideImage() {
-        if (!matched) {
-            setIcon(back);
-            revealed = false;
-        }
     }
 
     public boolean isMatched() {

@@ -50,7 +50,7 @@ public class KMHM_MainUI extends JFrame {
         setLocationRelativeTo(null);
         setLayout(null);
 
-        btnRespiratory = createMiniGameButton("img/RespiratoryMG.png", ()-> new respiratory(), 50, 400);
+        btnRespiratory = createMiniGameButton("img/RespiratoryMG.png", ()-> new RespiratoryGame(), 50, 400);
         btnNervous = createMiniGameButton("img/NervousMG.png", ()-> new NervousSystemGame(), 180, 400);
         btnDigestive = createMiniGameButton("img/DigestiveMG.png", () -> new DigestiveMiniGame(), 50, 520);
         btnCirculatory = createMiniGameButton("img/CirculatoryMG.png", () -> new CirculatoryGame(), 180, 520);
