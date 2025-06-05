@@ -47,10 +47,10 @@ public class KMHM_MainUI extends JFrame {
         setLocationRelativeTo(null);
         setLayout(null);
 
-        btnRespiratory = createMiniGameButton("img/RespiratoryMG.png", () -> new RespiratoryGame(), 50, 400);
-        btnNervous = createMiniGameButton("img/NervousMG.png", () -> new NervousSystemGame(), 180, 400);
-        btnDigestive = createMiniGameButton("img/DigestiveMG.png", () -> new DigestiveMiniGame(), 50, 520);
-        btnCirculatory = createMiniGameButton("img/CirculatoryMG.png", () -> new CirculatoryGame(), 180, 520);
+        btnRespiratory = createMiniGameButton("/img/RespiratoryMG.png", () -> new RespiratoryGame(), 50, 400);
+        btnNervous = createMiniGameButton("/img/NervousMG.png", () -> new NervousSystemGame(), 180, 400);
+        btnDigestive = createMiniGameButton("/img/DigestiveMG.png", () -> new DigestiveMiniGame(), 50, 520);
+        btnCirculatory = createMiniGameButton("/img/CirculatoryMG.png", () -> new CirculatoryGame(), 180, 520);
 
         // --- 이미지 및 컴포넌트 생성
 
@@ -186,8 +186,8 @@ public class KMHM_MainUI extends JFrame {
         resizeComponents();
     }
 
-    private JButton createMiniGameButton(String imageFileName, Runnable onClickAction, int x, int y) {
-        ImageIcon icon = new ImageIcon(imageFileName);
+    private JButton createMiniGameButton(String imagePath, Runnable onClickAction, int x, int y) {
+        ImageIcon icon = new ImageIcon(getClass().getResource(imagePath));
         JButton button = new JButton(icon);
         button.setBounds(x, y, 120, 120);
         button.setContentAreaFilled(false);
