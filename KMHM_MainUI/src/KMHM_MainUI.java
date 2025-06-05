@@ -50,10 +50,10 @@ public class KMHM_MainUI extends JFrame {
         setLocationRelativeTo(null);
         setLayout(null);
 
-        JButton btnRespiratory = createMiniGameButton("RespiratoryMG.png", ()-> new respiratory(), 50, 400);
-        JButton btnNervous = createMiniGameButton("NervousMG.png", ()-> new NervousSystemGame(), 180, 400);
-        JButton btnDigestive = createMiniGameButton("DigestiveMG.png", () -> new DigestiveMiniGame(), 50, 520);
-        JButton btnCirculatory = createMiniGameButton("CirculatoryMG.png", () -> new CirculatoryGame(), 180, 520);
+        btnRespiratory = createMiniGameButton("img/RespiratoryMG.png", ()-> new respiratory(), 50, 400);
+        btnNervous = createMiniGameButton("img/NervousMG.png", ()-> new NervousSystemGame(), 180, 400);
+        btnDigestive = createMiniGameButton("img/DigestiveMG.png", () -> new DigestiveMiniGame(), 50, 520);
+        btnCirculatory = createMiniGameButton("img/CirculatoryMG.png", () -> new CirculatoryGame(), 180, 520);
 
 
 
@@ -190,15 +190,22 @@ public class KMHM_MainUI extends JFrame {
         resizeComponents();
     }
 
-    private JButton createMiniGameButton(String imagePath, Runnable gameLauncher, int x, int y) {
-        JButton button = new JButton(new ImageIcon(getClass().getResource(imagePath)));
-        button.setBounds(x, y, 120, 120);  // 버튼 사이즈 조정 가능
+
+
+    private JButton createMiniGameButton(String imageFileName, Runnable onClickAction, int x, int y) {
+        ImageIcon icon = new ImageIcon(imageFileName); 
+        JButton button = new JButton(icon);
+        button.setBounds(x, y, 120,120);
         button.setContentAreaFilled(false);
         button.setBorderPainted(false);
-        button.addActionListener(e -> gameLauncher.run());
+        button.setFocusPainted(false);
+        button.addActionListener(e -> onClickAction.run());
+
         add(button);
+        
         return button;
     }
+
 
 
     private int[] clickCounts = new int[4];
@@ -369,10 +376,7 @@ public class KMHM_MainUI extends JFrame {
             percentLabels[i].setBounds(marginX + usableWidth - 50, y + labelHeight + 2, 50, barHeight);
         }
 
-        this.btnCirculatory.setBounds(startX, startY, btnSize, btnSize);
-        this.btnDigestive.setBounds(startX + btnSize + 20, startY, btnSize, btnSize);
-        this.btnNervous.setBounds(startX, startY + btnSize + 20, btnSize, btnSize);
-        this.btnRespiratory.setBounds(startX + btnSize + 20, startY + btnSize + 20, btnSize, btnSize);
+       
         background.setBounds(0, 0, w, h);
         background.setIcon(new ImageIcon(getHighQualityScaledImage(bgImg, w, h)));
 
