@@ -7,6 +7,12 @@ import java.io.IOException;
 import java.util.*;
 
 public class KMHM_MainUI extends JFrame {
+    // 🔻 사용자 정보 생성자 추가
+    public KMHM_MainUI(String name, String age, String gender, String height, String weight) {
+        this(); // 기존 기본 생성자 호출
+        showPatientInfo(name, age, gender, height, weight); // 정보 표시
+    }
+
 
     // --- UI 변수들
     private JLabel background, human, scanning, gameTimer, groupWave, rightComponents, stopBtn;
@@ -47,10 +53,10 @@ public class KMHM_MainUI extends JFrame {
         setLocationRelativeTo(null);
         setLayout(null);
 
-        btnRespiratory = createMiniGameButton("/img/RespiratoryMG.png", () -> new RespiratoryGame(), 50, 400);
-        btnNervous = createMiniGameButton("/img/NervousMG.png", () -> new NervousSystemGame(), 180, 400);
-        btnDigestive = createMiniGameButton("/img/DigestiveMG.png", () -> new DigestiveMiniGame(), 50, 520);
-        btnCirculatory = createMiniGameButton("/img/CirculatoryMG.png", () -> new CirculatoryGame(), 180, 520);
+        btnRespiratory = createMiniGameButton("img/RespiratoryMG.png", () -> new RespiratoryGame(), 50, 400);
+        btnNervous = createMiniGameButton("img/NervousMG.png", () -> new NervousSystemGame(), 180, 400);
+        btnDigestive = createMiniGameButton("img/DigestiveMG.png", () -> new DigestiveMiniGame(), 50, 520);
+        btnCirculatory = createMiniGameButton("img/CirculatoryMG.png", () -> new CirculatoryGame(), 180, 520);
 
         // --- 이미지 및 컴포넌트 생성
 
@@ -186,8 +192,8 @@ public class KMHM_MainUI extends JFrame {
         resizeComponents();
     }
 
-    private JButton createMiniGameButton(String imagePath, Runnable onClickAction, int x, int y) {
-        ImageIcon icon = new ImageIcon(getClass().getResource(imagePath));
+    private JButton createMiniGameButton(String imageFileName, Runnable onClickAction, int x, int y) {
+        ImageIcon icon = new ImageIcon(imageFileName);
         JButton button = new JButton(icon);
         button.setBounds(x, y, 120, 120);
         button.setContentAreaFilled(false);
@@ -494,5 +500,30 @@ public class KMHM_MainUI extends JFrame {
     public static void main(String[] args) {
         new KMHM_MainUI();
     }
+    // 🔻 오른쪽 하단에 환자 정보 출력
+    private void showPatientInfo(String name, String age, String gender, String height, String weight) {
+        JLabel infoLabel = new JLabel();
+        infoLabel.setBounds(880, 420, 240, 160); // 오른쪽 하단 위치
+        infoLabel.setForeground(Color.WHITE);
+        infoLabel.setFont(new Font("맑은 고딕", Font.PLAIN, 23));
+        infoLabel.setVerticalAlignment(SwingConstants.TOP);
+
+        String infoText = "<html><div style='line-height:1.8'>"
+                + "<b>이름:</b> " + name + "<br>"
+                + "<b>나이:</b> " + age + "<br>"
+                + "<b>성별:</b> " + gender + "<br>"
+                + "<b>키:</b> " + height + " cm<br>"
+                + "<b>몸무게:</b> " + weight + " kg"
+                + "</div></html>";
+        infoLabel.setText(infoText);
+
+        // 🔻 기존 컴포넌트보다 위에 표시되도록 가장 나중에 add
+        this.getContentPane().add(infoLabel);
+        this.getContentPane().setComponentZOrder(infoLabel, 0);  // z-index 조정 (가장 위로)
+
+        repaint();
+    }
+
+
 
 }

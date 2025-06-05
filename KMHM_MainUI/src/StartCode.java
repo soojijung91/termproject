@@ -7,12 +7,6 @@ public class StartCode extends JFrame {
     private JButton startButton;
     private JButton howToButton;
     private BackgroundPanel background;
-    // --- 유저 입력 저장용 ---
-    private int[] userTotalScores = new int[4];
-    private int[] userGaugePercents = new int[4];
-    private String[] userFeedbacks = new String[4];
-    private java.util.List<String>[] userMissions = new java.util.ArrayList[4]; // 각 장기별 추천목표
-
 
     public StartCode() {
         setTitle("Kill Me Heal Me");
@@ -44,7 +38,57 @@ public class StartCode extends JFrame {
         background.add(startButton);
         background.add(howToButton);
 
-        startButton.addActionListener(e -> new InfoFrame());
+        // ✅ 사용자 정보 입력 및 KMHM_MainUI로 전달
+        startButton.addActionListener(e -> {
+            JTextField nameField = new JTextField();
+            JTextField ageField = new JTextField();
+            String[] genderOptions = { "남성", "여성", "기타" };
+            JComboBox<String> genderBox = new JComboBox<>(genderOptions);
+            JTextField heightField = new JTextField();
+            JTextField weightField = new JTextField();
+
+            JPanel panel = new JPanel(new GridLayout(0, 2, 10, 10));
+            panel.add(new JLabel("이름:"));
+            panel.add(nameField);
+            panel.add(new JLabel("나이:"));
+            panel.add(ageField);
+            panel.add(new JLabel("성별:"));
+            panel.add(genderBox);
+            panel.add(new JLabel("키 (cm):"));
+            panel.add(heightField);
+            panel.add(new JLabel("몸무게 (kg):"));
+            panel.add(weightField);
+
+            int result = JOptionPane.showConfirmDialog(
+                    this, panel, "환자 정보 입력", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+
+            if (result == JOptionPane.OK_OPTION) {
+                String name = nameField.getText().trim();
+                String age = ageField.getText().trim();
+                String gender = (String) genderBox.getSelectedItem();
+                String height = heightField.getText().trim();
+                String weight = weightField.getText().trim();
+
+                if (name.isEmpty() || age.isEmpty() || height.isEmpty() || weight.isEmpty()) {
+                    JOptionPane.showMessageDialog(this, "모든 항목을 입력해주세요.");
+                    return;
+                }
+
+                System.out.println("이름: " + name);
+                System.out.println("나이: " + age);
+                System.out.println("성별: " + gender);
+                System.out.println("키: " + height);
+                System.out.println("몸무게: " + weight);
+
+                dispose();
+
+                // ✅ 환자 정보를 전달하는 생성자 사용
+                KMHM_MainUI game = new KMHM_MainUI(name, age, gender, height, weight);
+                game.setSize(getSize());
+                game.setLocationRelativeTo(null);
+                game.setVisible(true);
+            }
+        });
 
         howToButton.addActionListener(e -> new HowToFrame());
 
@@ -86,135 +130,8 @@ public class StartCode extends JFrame {
             g.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), this);
         }
     }
-    private void showSummaryFrame() {
-        JFrame summaryFrame = new JFrame("설문 결과 요약");
-        summaryFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        summaryFrame.setSize(getWidth(), getHeight()); // 기존 메인창 크기와 동일
-
-        JTextArea textArea = new JTextArea();
-        textArea.setEditable(false);
-        textArea.setFont(new Font("맑은 고딕", Font.PLAIN, 18));
-        textArea.setLineWrap(true);
-        textArea.setWrapStyleWord(true);
-
-        String[] systemKor = {"신경계", "호흡계", "소화계", "순환계"};
-        StringBuilder summary = new StringBuilder();
-        summary.append("★ 게임 종료 – 내 건강 설문 결과 요약\n\n");
-        for (int i = 0; i < 4; i++) {
-            summary.append("[").append(systemKor[i]).append("]\n");
-            summary.append("점수: ").append(userTotalScores[i]).append("점 / 게이지: ").append(userGaugePercents[i]).append("%\n");
-            summary.append("피드백: ").append(userFeedbacks[i]).append("\n");
-            summary.append("오늘의 추천 목표:\n");
-            if (userMissions[i] != null) {
-                for (String m : userMissions[i]) {
-                    summary.append("  - ").append(m).append("\n");
-                }
-            }
-            summary.append("\n");
-        }
-        textArea.setText(summary.toString());
-
-        JScrollPane scrollPane = new JScrollPane(textArea);
-        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-
-        summaryFrame.add(scrollPane);
-        summaryFrame.setLocationRelativeTo(null); // 화면 중앙
-        summaryFrame.setVisible(true);
-    }
-
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(StartCode::new);
-    }
-}
-
-class InfoFrame extends JFrame {
-
-    public InfoFrame() {
-        setTitle("환자 정보 입력");
-        setSize(1073, 768);
-        setLocationRelativeTo(null);
-        setResizable(false);
-        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        setLayout(null);
-
-        JPanel backgroundPanel = new JPanel() {
-            private final Image bg = new ImageIcon(getClass().getResource("/img/InfoBackground.png")).getImage();
-
-            protected void paintComponent(Graphics g) {
-                super.paintComponent(g);
-                g.drawImage(bg, 0, 0, getWidth(), getHeight(), this);
-            }
-        };
-        backgroundPanel.setLayout(null);
-        backgroundPanel.setBounds(0, 0, getWidth(), getHeight());
-        add(backgroundPanel);
-
-        JLabel[] labels = new JLabel[5];
-        JTextField[] fields = new JTextField[5];
-        String[] texts = { "이름", "나이", "성별", "키 (cm)", "몸무게 (kg)" };
-
-        for (int i = 0; i < 5; i++) {
-            labels[i] = new JLabel(texts[i] + ":");
-            labels[i].setForeground(Color.WHITE);
-            labels[i].setFont(new Font("맑은 고딕", Font.BOLD, 18));
-            labels[i].setBounds(340, 160 + i * 70, 120, 30);
-            backgroundPanel.add(labels[i]);
-
-            if (i == 2) {
-                fields[i] = null;
-                JComboBox<String> genderBox = new JComboBox<>(new String[] { "남성", "여성", "기타" });
-                genderBox.setBounds(470, 160 + i * 70, 250, 30);
-                genderBox.setFont(new Font("맑은 고딕", Font.PLAIN, 16));
-                backgroundPanel.add(genderBox);
-                genderBox.setName("genderBox");
-            } else {
-                fields[i] = new JTextField();
-                fields[i].setBounds(470, 160 + i * 70, 250, 30);
-                fields[i].setFont(new Font("맑은 고딕", Font.PLAIN, 16));
-                backgroundPanel.add(fields[i]);
-            }
-        }
-
-        JButton confirmBtn = new JButton("OK");
-        confirmBtn.setBounds(430, 530, 200, 45);
-        confirmBtn.setFont(new Font("맑은 고딕", Font.BOLD, 18));
-        confirmBtn.setFocusPainted(false);
-        backgroundPanel.add(confirmBtn);
-
-        confirmBtn.addActionListener(e -> {
-            String name = fields[0].getText().trim();
-            String age = fields[1].getText().trim();
-            JComboBox<?> genderBox = (JComboBox<?>) findComponentByName(backgroundPanel, "genderBox");
-            String gender = genderBox.getSelectedItem().toString();
-            String height = fields[3].getText().trim();
-            String weight = fields[4].getText().trim();
-
-            if (name.isEmpty() || age.isEmpty() || height.isEmpty() || weight.isEmpty()) {
-                JOptionPane.showMessageDialog(this, "모든 항목을 입력해주세요.");
-                return;
-            }
-
-            dispose();
-            KMHM_MainUI game = new KMHM_MainUI();
-            game.setSize(getSize());
-            game.setLocationRelativeTo(null);
-            game.setVisible(true);
-        });
-
-        setVisible(true);
-    }
-
-    private Component findComponentByName(Container container, String name) {
-        for (Component c : container.getComponents()) {
-            if (name.equals(c.getName()))
-                return c;
-            if (c instanceof Container) {
-                Component child = findComponentByName((Container) c, name);
-                if (child != null)
-                    return child;
-            }
-        }
-        return null;
     }
 }
