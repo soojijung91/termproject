@@ -1,11 +1,10 @@
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.*;
 import javax.swing.*;
-
-
-
 
 public class KMHM_MainUI extends JFrame {
 
@@ -41,8 +40,6 @@ public class KMHM_MainUI extends JFrame {
     private JButton btnDigestive;
     private JButton btnCirculatory;
 
-
-
     public KMHM_MainUI() {
         setTitle("KMHM - Game Screen");
         setSize(1073, 768);
@@ -50,12 +47,10 @@ public class KMHM_MainUI extends JFrame {
         setLocationRelativeTo(null);
         setLayout(null);
 
-        btnRespiratory = createMiniGameButton("img/RespiratoryMG.png", ()-> new RespiratoryGame(), 50, 400);
-        btnNervous = createMiniGameButton("img/NervousMG.png", ()-> new NervousSystemGame(), 180, 400);
+        btnRespiratory = createMiniGameButton("img/RespiratoryMG.png", () -> new RespiratoryGame(), 50, 400);
+        btnNervous = createMiniGameButton("img/NervousMG.png", () -> new NervousSystemGame(), 180, 400);
         btnDigestive = createMiniGameButton("img/DigestiveMG.png", () -> new DigestiveMiniGame(), 50, 520);
         btnCirculatory = createMiniGameButton("img/CirculatoryMG.png", () -> new CirculatoryGame(), 180, 520);
-
-
 
         // --- 이미지 및 컴포넌트 생성
 
@@ -89,14 +84,18 @@ public class KMHM_MainUI extends JFrame {
         centerClockLabel = new JLabel("00:00", SwingConstants.CENTER);
         centerClockLabel.setForeground(Color.GREEN);
         centerClockLabel.setOpaque(false);
-      
+
+        try {
+            Font digitalFont = Font.createFont(Font.TRUETYPE_FONT, new File("src/fonts/digital-7.ttf")).deriveFont(36f);
+            centerClockLabel.setFont(digitalFont);
+        } catch (FontFormatException | IOException e) {
+            centerClockLabel.setFont(new Font("Dialog", Font.BOLD, 33));
+            System.err.println("폰트를 불러오는 데 실패했습니다: " + e.getMessage());
+        }
 
         add(centerClockLabel);
         add(pulseRateLabel);
         add(pulseGroupIcon);
-        int startY = 500;
-        int startX = 150;
-        int btnSize = 100;
         for (int i = 0; i < 4; i++) {
             nameLabels[i] = new JLabel(systemNames[i]);
             nameLabels[i].setFont(new Font("맑은 고딕", Font.BOLD, 14));
@@ -156,15 +155,12 @@ public class KMHM_MainUI extends JFrame {
         add(human);
         add(background);
 
-
-
         // --- stopBtn 클릭 시 요약+종료
         stopBtn.addMouseListener(new MouseAdapter() {
             public void mouseClicked(MouseEvent e) {
                 showSummaryAndExit();
             }
         });
-
 
         human.addMouseListener(new MouseAdapter() {
             public void mouseClicked(MouseEvent e) {
@@ -190,30 +186,26 @@ public class KMHM_MainUI extends JFrame {
         resizeComponents();
     }
 
-
-
     private JButton createMiniGameButton(String imageFileName, Runnable onClickAction, int x, int y) {
-        ImageIcon icon = new ImageIcon(imageFileName); 
+        ImageIcon icon = new ImageIcon(imageFileName);
         JButton button = new JButton(icon);
-        button.setBounds(x, y, 120,120);
+        button.setBounds(x, y, 120, 120);
         button.setContentAreaFilled(false);
         button.setBorderPainted(false);
         button.setFocusPainted(false);
         button.addActionListener(e -> onClickAction.run());
 
         add(button);
-        
+
         return button;
     }
-
-
 
     private int[] clickCounts = new int[4];
     private int[] triggerClicks = new int[4];
     private Random random = new Random();
 
-
-    private void checkGameStatus() {}
+    private void checkGameStatus() {
+    }
 
     private void updateGauge(int index, int increment, String feedbackMsg) {
         int val = bars[index].getValue();
@@ -229,17 +221,25 @@ public class KMHM_MainUI extends JFrame {
     @SuppressWarnings("unchecked")
     private void increase(int index) {
         String[][] missionRecommends = {
-                { "밤 11시 이전 스마트폰 사용 중단", "오늘 7시간 이상 자기", "스트레스 느낄 때 5분간 천천히 숨쉬기", "취침 30분 전 음악 듣기", "오후 10시 이후 카페인 음료 피하기", "마음이 불안할 때 가벼운 산책하기", "명상 앱 켜고 10분간 마음 집중" },
-                { "외출 전 미세먼지 수치 체크하고 마스크 챙기기", "하루 2회 이상 방 환기", "실내 가습기 사용 혹은 젖은 수건 걸기", "집안 공기청정기 청소하기", "오늘은 담배와 먼 거리 유지", "심호흡 10회 천천히 해보기", "실내 식물 가까이서 5분간 심호흡" },
-                { "오늘은 야식 금지!", "아침 식사 꼭 챙기기", "식사 전후 따뜻한 물 한 잔 마시기", "하루 채소 반찬 2가지 이상 먹기", "탄산음료 대신 물 마시기", "식사 중 천천히 20번 이상 씹기", "저녁 8시 이후 음식 섭취 줄이기" },
-                { "오늘 20분간 산책하기", "계단 오르기 3회 실천", "식사 시 짠 음식 줄이기", "식후 10분 스트레칭", "잠깐 일어나서 다리 털기 5회", "버스 한 정거장 미리 내려 걷기", "마트에서 저염식 제품 하나 구매해보기" }
+                { "밤 11시 이전 스마트폰 사용 중단", "오늘 7시간 이상 자기", "스트레스 느낄 때 5분간 천천히 숨쉬기", "취침 30분 전 음악 듣기",
+                        "오후 10시 이후 카페인 음료 피하기", "마음이 불안할 때 가벼운 산책하기", "명상 앱 켜고 10분간 마음 집중" },
+                { "외출 전 미세먼지 수치 체크하고 마스크 챙기기", "하루 2회 이상 방 환기", "실내 가습기 사용 혹은 젖은 수건 걸기", "집안 공기청정기 청소하기",
+                        "오늘은 담배와 먼 거리 유지", "심호흡 10회 천천히 해보기", "실내 식물 가까이서 5분간 심호흡" },
+                { "오늘은 야식 금지!", "아침 식사 꼭 챙기기", "식사 전후 따뜻한 물 한 잔 마시기", "하루 채소 반찬 2가지 이상 먹기", "탄산음료 대신 물 마시기",
+                        "식사 중 천천히 20번 이상 씹기", "저녁 8시 이후 음식 섭취 줄이기" },
+                { "오늘 20분간 산책하기", "계단 오르기 3회 실천", "식사 시 짠 음식 줄이기", "식후 10분 스트레칭", "잠깐 일어나서 다리 털기 5회",
+                        "버스 한 정거장 미리 내려 걷기", "마트에서 저염식 제품 하나 구매해보기" }
         };
 
         String[][] questions = {
-                { "1. 하루 평균 수면 시간은 몇 시간인가요?", "2. 최근 일주일 동안 스트레스를 많이 받았나요?", "3. 자기 전에 전자기기(스마트폰, 컴퓨터 등)를 얼마나 사용하나요?", "4. 평소 마음을 안정시키는 활동이 있나요?", "5. 최근 우울감을 느낀 적이 있나요?" },
-                { "1. 하루에 얼마나 자주 환기를 시키시나요?", "2. 운동 중 숨이 차거나 호흡 곤란을 느낀 적이 있나요?", "3. 최근 감기, 기침 또는 인후통 등의 증상이 있었나요?", "4. 미세먼지 심한 날 외출 시 마스크를 착용하나요?", "5. 최근 흡연 또는 간접흡연 경험이 있나요?" },
-                { "1. 평소 식사 시간을 규칙적으로 지키시나요?", "2. 일주일에 몇 번 외식을 하나요?", "3. 변비나 복부 불편감을 자주 느끼시나요?", "4. 평소 야식이나 폭식을 하나요?", "5. 물을 충분히 마시나요?" },
-                { "1. 평소 혈압을 측정한 적이 있나요?", "2. 일주일에 몇 번 정도 유산소 운동(걷기, 조깅 등)을 하시나요?", "3. 짠 음식이나 기름진 음식을 자주 드시나요?", "4. 최근 체중 변화를 느끼셨나요?", "5. 가족 중 고혈압이나 심장 질환 병력이 있나요?" }
+                { "1. 하루 평균 수면 시간은 몇 시간인가요?", "2. 최근 일주일 동안 스트레스를 많이 받았나요?", "3. 자기 전에 전자기기(스마트폰, 컴퓨터 등)를 얼마나 사용하나요?",
+                        "4. 평소 마음을 안정시키는 활동이 있나요?", "5. 최근 우울감을 느낀 적이 있나요?" },
+                { "1. 하루에 얼마나 자주 환기를 시키시나요?", "2. 운동 중 숨이 차거나 호흡 곤란을 느낀 적이 있나요?", "3. 최근 감기, 기침 또는 인후통 등의 증상이 있었나요?",
+                        "4. 미세먼지 심한 날 외출 시 마스크를 착용하나요?", "5. 최근 흡연 또는 간접흡연 경험이 있나요?" },
+                { "1. 평소 식사 시간을 규칙적으로 지키시나요?", "2. 일주일에 몇 번 외식을 하나요?", "3. 변비나 복부 불편감을 자주 느끼시나요?",
+                        "4. 평소 야식이나 폭식을 하나요?", "5. 물을 충분히 마시나요?" },
+                { "1. 평소 혈압을 측정한 적이 있나요?", "2. 일주일에 몇 번 정도 유산소 운동(걷기, 조깅 등)을 하시나요?", "3. 짠 음식이나 기름진 음식을 자주 드시나요?",
+                        "4. 최근 체중 변화를 느끼셨나요?", "5. 가족 중 고혈압이나 심장 질환 병력이 있나요?" }
         };
         String[][][] options = {
         };
@@ -260,8 +260,7 @@ public class KMHM_MainUI extends JFrame {
         }
 
         int result = JOptionPane.showConfirmDialog(
-                this, panel, systemNames[index] + " 건강 설문", JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE
-        );
+                this, panel, systemNames[index] + " 건강 설문", JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);
 
         if (result == JOptionPane.OK_OPTION) {
             int totalScore = 0;
@@ -271,24 +270,38 @@ public class KMHM_MainUI extends JFrame {
             }
             int gaugePercent;
             String feedbackMsg;
-            if (totalScore >= 45)      gaugePercent = 100;
-            else if (totalScore >= 40) gaugePercent = 80;
-            else if (totalScore >= 35) gaugePercent = 60;
-            else if (totalScore >= 25) gaugePercent = 40;
-            else                      gaugePercent = 20;
+            if (totalScore >= 45)
+                gaugePercent = 100;
+            else if (totalScore >= 40)
+                gaugePercent = 80;
+            else if (totalScore >= 35)
+                gaugePercent = 60;
+            else if (totalScore >= 25)
+                gaugePercent = 40;
+            else
+                gaugePercent = 20;
 
             String[][] feedbacks = {
-                    { "정말 훌륭해요! 신경계 건강이 완벽합니다.", "아주 좋네요. 조금만 더 신경쓰면 완벽해요.", "보통입니다. 생활습관을 점검해보세요.", "다소 주의가 필요해요. 개선이 필요합니다.", "위험 신호! 반드시 관리하세요." },
-                    { "호흡기 건강이 매우 좋습니다. 앞으로도 꾸준히 관리해 주세요.", "전반적으로 좋으나, 미세먼지 등 환경에도 신경 써주세요.", "보통입니다. 운동, 환기에 신경 써주세요.", "주의가 필요합니다. 호흡기 건강을 점검해보세요.", "경고! 호흡기 건강 개선이 꼭 필요합니다." },
-                    { "소화기 건강이 아주 우수합니다!", "좋은 편이나, 식습관을 조금 더 챙기면 더 좋아요.", "보통입니다. 야식, 폭식 등을 점검해 보세요.", "소화기 건강에 주의가 필요합니다.", "경고! 식습관 개선이 시급합니다." },
-                    { "순환기 건강이 매우 우수해요.", "아주 좋지만, 운동이나 식단에 조금 더 신경 써주세요.", "보통입니다. 가족력 등 점검 필요.", "주의! 체중, 혈압 등 관리 필요합니다.", "경고! 순환기 건강에 심각한 위험이 있습니다." }
+                    { "정말 훌륭해요! 신경계 건강이 완벽합니다.", "아주 좋네요. 조금만 더 신경쓰면 완벽해요.", "보통입니다. 생활습관을 점검해보세요.",
+                            "다소 주의가 필요해요. 개선이 필요합니다.", "위험 신호! 반드시 관리하세요." },
+                    { "호흡기 건강이 매우 좋습니다. 앞으로도 꾸준히 관리해 주세요.", "전반적으로 좋으나, 미세먼지 등 환경에도 신경 써주세요.",
+                            "보통입니다. 운동, 환기에 신경 써주세요.", "주의가 필요합니다. 호흡기 건강을 점검해보세요.", "경고! 호흡기 건강 개선이 꼭 필요합니다." },
+                    { "소화기 건강이 아주 우수합니다!", "좋은 편이나, 식습관을 조금 더 챙기면 더 좋아요.", "보통입니다. 야식, 폭식 등을 점검해 보세요.",
+                            "소화기 건강에 주의가 필요합니다.", "경고! 식습관 개선이 시급합니다." },
+                    { "순환기 건강이 매우 우수해요.", "아주 좋지만, 운동이나 식단에 조금 더 신경 써주세요.", "보통입니다. 가족력 등 점검 필요.",
+                            "주의! 체중, 혈압 등 관리 필요합니다.", "경고! 순환기 건강에 심각한 위험이 있습니다." }
             };
             int fbIdx;
-            if (totalScore >= 45)      fbIdx = 0;
-            else if (totalScore >= 40) fbIdx = 1;
-            else if (totalScore >= 35) fbIdx = 2;
-            else if (totalScore >= 25) fbIdx = 3;
-            else                      fbIdx = 4;
+            if (totalScore >= 45)
+                fbIdx = 0;
+            else if (totalScore >= 40)
+                fbIdx = 1;
+            else if (totalScore >= 35)
+                fbIdx = 2;
+            else if (totalScore >= 25)
+                fbIdx = 3;
+            else
+                fbIdx = 4;
 
             feedbackMsg = feedbacks[index][fbIdx];
 
@@ -310,10 +323,8 @@ public class KMHM_MainUI extends JFrame {
 
             String msg = String.format(
                     "점수: %d점\n게이지: %d%%\n\n%s",
-                    totalScore, gaugePercent, feedbackMsg
-            );
+                    totalScore, gaugePercent, feedbackMsg);
             JOptionPane.showMessageDialog(this, msg, systemNames[index] + " 설문 결과", JOptionPane.INFORMATION_MESSAGE);
-
 
             StringBuilder goalMsg = new StringBuilder();
             goalMsg.append("오늘의 추천 건강 목표\n\n");
@@ -339,7 +350,8 @@ public class KMHM_MainUI extends JFrame {
             sb.append("- 피드백: ").append(userFeedbacks[i] != null ? userFeedbacks[i] : "(응답 없음)").append("\n");
             sb.append("- 오늘의 목표: ");
             if (userMissions[i] != null) {
-                for (String m : userMissions[i]) sb.append(m).append(", ");
+                for (String m : userMissions[i])
+                    sb.append(m).append(", ");
                 sb.setLength(sb.length() - 2); // 마지막 콤마 제거
             } else {
                 sb.append("(없음)");
@@ -354,7 +366,6 @@ public class KMHM_MainUI extends JFrame {
         System.exit(0);
     }
 
-
     private void resizeComponents() {
         int w = getWidth();
         int h = getHeight();
@@ -368,7 +379,6 @@ public class KMHM_MainUI extends JFrame {
         int barHeight = 24;
         int labelHeight = 18;
 
-
         for (int i = 0; i < 4; i++) {
             int y = startY + i * spacing;
             nameLabels[i].setBounds(marginX, y, 150, labelHeight);
@@ -376,7 +386,6 @@ public class KMHM_MainUI extends JFrame {
             percentLabels[i].setBounds(marginX + usableWidth - 50, y + labelHeight + 2, 50, barHeight);
         }
 
-       
         background.setBounds(0, 0, w, h);
         background.setIcon(new ImageIcon(getHighQualityScaledImage(bgImg, w, h)));
 
@@ -434,17 +443,6 @@ public class KMHM_MainUI extends JFrame {
         int timeY = rightY + (rightSize - timeH) / 2;
         centerClockLabel.setBounds(timeX - 5, timeY - 5, timeW, timeH);
 
-        int pulseW = timerW;
-        int pulseH = timerH;
-        int pulseX = rightX;
-        int pulseY = rightY + rightSize + 5;
-        pulseRateLabel.setBounds(pulseX, pulseY, pulseW, pulseH);
-        pulseRateLabel.setIcon(new ImageIcon(getHighQualityScaledImage(pulseRateImg, pulseW, pulseH)));
-        pulseGroupIcon.setBounds(pulseX + pulseW + 10, pulseY + 1, groupSize, groupSize);
-        pulseGroupIcon.setIcon(new ImageIcon(getHighQualityScaledImage(pulseGroupImg, groupSize, groupSize)));
-
-        ecgPanel.setBounds(pulseX, pulseY + pulseH + 5, rightSize, 80);
-
         int stopW = 140;
         int stopH = 60;
         stopBtn.setBounds(w - stopW - 30, h - stopH - 40, stopW, stopH);
@@ -467,55 +465,9 @@ public class KMHM_MainUI extends JFrame {
 
     class GraphPanel extends JPanel {
         private final LinkedList<Integer> waveform = new LinkedList<>();
-        private final javax.swing.Timer timer;
         private final Random rand = new Random();
         private int t = 0;
 
-        public GraphPanel() {
-            setOpaque(true);
-            setBackground(new Color(10, 20, 30));
-            timer = new javax.swing.Timer(30, e -> {
-                if (waveform.size() >= getWidth())
-                    waveform.removeFirst();
-                waveform.add(generateWaveformPoint());
-                repaint();
-            });
-            timer.start();
-        }
-
-        private int generateWaveformPoint() {
-            t++;
-            int height = getHeight();
-            int base = height / 2;
-            int spike = 0;
-            if (t % 90 == 0)
-                spike = -30;
-            else if (t % 150 == 0)
-                spike = 35;
-            else if (t % 200 == 0)
-                spike = -20;
-            double sin = Math.sin(t * 0.2) * height * 0.25;
-            double noise = rand.nextGaussian() * 4;
-            return (int) (base + sin + noise + spike);
-        }
-
-        protected void paintComponent(Graphics g) {
-            super.paintComponent(g);
-            int width = getWidth();
-            int height = getHeight();
-            g.setColor(new Color(50, 65, 80));
-            for (int x = 0; x < width; x += 20)
-                g.drawLine(x, 0, x, height);
-            for (int y = 0; y < height; y += 20)
-                g.drawLine(0, y, width, y);
-            g.setColor(Color.GREEN);
-            int prevY = waveform.size() > 0 ? waveform.get(0) : height / 2;
-            for (int i = 1; i < waveform.size(); i++) {
-                int y = waveform.get(i);
-                g.drawLine(i - 1, prevY, i, y);
-                prevY = y;
-            }
-        }
     }
 
     public static void main(String[] args) {
@@ -523,4 +475,3 @@ public class KMHM_MainUI extends JFrame {
     }
 
 }
-
