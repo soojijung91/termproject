@@ -21,10 +21,6 @@ public class DigestiveMiniGame extends JFrame {
     private int correctCount = 0;
     private Image backgroundImage;
 
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> new DigestiveMiniGame());
-    }
-
     public DigestiveMiniGame() {
         setTitle("소화계 미니게임");
         setSize(1073, 768);
@@ -37,7 +33,7 @@ public class DigestiveMiniGame extends JFrame {
             backgroundImage = new ImageIcon(getClass().getResource("/img/FrameD.png")).getImage();
         } catch (Exception e) {
             e.printStackTrace();
-            System.exit(1);
+            dispose();
         }
 
         BackgroundPanel backgroundPanel = new BackgroundPanel();
@@ -123,7 +119,7 @@ public class DigestiveMiniGame extends JFrame {
         if (currentIndex >= gameList.size()) {
             String msg = correctCount >= 5 ? "✅ Game Clear!" : "❌ Game Over!";
             JOptionPane.showMessageDialog(this, msg, "결과", JOptionPane.INFORMATION_MESSAGE);
-            System.exit(0);
+            dispose();
         }
 
         FoodItem currentFood = gameList.get(currentIndex);

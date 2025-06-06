@@ -1,10 +1,10 @@
-import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
+import javax.swing.*;
 
 public class KMHM_MainUI extends JFrame {
     // 🔻 사용자 정보 생성자 추가
@@ -53,10 +53,10 @@ public class KMHM_MainUI extends JFrame {
         setLocationRelativeTo(null);
         setLayout(null);
 
-        btnRespiratory = createMiniGameButton("img/RespiratoryMG.png", () -> new RespiratoryGame(), 50, 400);
-        btnNervous = createMiniGameButton("img/NervousMG.png", () -> new NervousSystemGame(), 180, 400);
-        btnDigestive = createMiniGameButton("img/DigestiveMG.png", () -> new DigestiveMiniGame(), 50, 520);
-        btnCirculatory = createMiniGameButton("img/CirculatoryMG.png", () -> new CirculatoryGame(), 180, 520);
+        btnRespiratory = createMiniGameButton("img/RespiratoryMG.png", () -> new RespiratoryGame(), 20, 400);
+        btnNervous = createMiniGameButton("img/NervousMG.png", () -> new NervousSystemGame(), 150, 400);
+        btnDigestive = createMiniGameButton("img/DigestiveMG.png", () -> new DigestiveMiniGame(), 20, 540);
+        btnCirculatory = createMiniGameButton("img/CirculatoryMG.png", () -> new CirculatoryGame(), 150, 540);
 
         // --- 이미지 및 컴포넌트 생성
 
@@ -195,7 +195,7 @@ public class KMHM_MainUI extends JFrame {
     private JButton createMiniGameButton(String imageFileName, Runnable onClickAction, int x, int y) {
         ImageIcon icon = new ImageIcon(imageFileName);
         JButton button = new JButton(icon);
-        button.setBounds(x, y, 120, 120);
+        button.setBounds(x, y, 110, 120);
         button.setContentAreaFilled(false);
         button.setBorderPainted(false);
         button.setFocusPainted(false);
