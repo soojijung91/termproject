@@ -9,9 +9,9 @@ import javax.swing.*;
 public class RespiratoryGame extends JFrame {
     public RespiratoryGame() {
         setTitle("호흡계 미니게임");
-        setSize(1024, 768);
+        setSize(1073, 768);
         setLocationRelativeTo(null);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
         GamePanel panel = new GamePanel();
         setContentPane(panel);
@@ -135,12 +135,14 @@ public class RespiratoryGame extends JFrame {
             if (gaugeFull && sizeMatch) {
                 gameEnded = true;
                 JOptionPane.showMessageDialog(this, "✅ Game Clear!", "성공", JOptionPane.INFORMATION_MESSAGE);
-            } else {
+            } 
+            else {
                 gameEnded = true;
                 JOptionPane.showMessageDialog(this, "❌ Game Over!", "실패", JOptionPane.ERROR_MESSAGE);
             }
 
-            System.exit(0);
+            SwingUtilities.getWindowAncestor(this).dispose();
+
         }
 
         @Override public void keyTyped(KeyEvent e) {}

@@ -7,8 +7,8 @@ import javax.swing.*;
 public class CirculatoryGame extends JFrame {
     public CirculatoryGame() {
         setTitle("순환계 미니게임");
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(1080, 768);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        setSize(1073, 768);
         setLocationRelativeTo(null);
         setResizable(true); // 창 크기 조절 허용
         add(new GamePanel());
@@ -63,7 +63,7 @@ class GamePanel extends JPanel implements ActionListener, KeyListener {
                 gameTimer.stop();
                 countdownTimer.stop();
                 JOptionPane.showMessageDialog(this, "✅ Game Clear!");
-                System.exit(0); // 게임 클리어 후 자동 종료
+                SwingUtilities.getWindowAncestor(this).dispose();
             }
         });
 
@@ -117,7 +117,8 @@ class GamePanel extends JPanel implements ActionListener, KeyListener {
                 gameTimer.stop();
                 countdownTimer.stop();
                 JOptionPane.showMessageDialog(this, "❌ Game Over!");
-                System.exit(0); // 게임 오버 시 자동 종료
+                SwingUtilities.getWindowAncestor(this).dispose();
+
                 return;
             }
         }

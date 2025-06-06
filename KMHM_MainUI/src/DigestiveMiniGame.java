@@ -1,10 +1,10 @@
 
-import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import javax.swing.*;
 
 public class DigestiveMiniGame extends JFrame {
     private final int TIME_LIMIT = 3000;
@@ -27,9 +27,9 @@ public class DigestiveMiniGame extends JFrame {
 
     public DigestiveMiniGame() {
         setTitle("소화계 미니게임");
-        setSize(1024, 768);
+        setSize(1073, 768);
         setLocationRelativeTo(null);
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setResizable(true);
         setVisible(true);
 

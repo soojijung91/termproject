@@ -1,28 +1,28 @@
 
-import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.util.List;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
+import javax.swing.*;
 
-public class NervousSystemGame {
-    public static void main(String[] args) {
-        JFrame frame = new JFrame("신경계 미니게임");
-        frame.setContentPane(new NervousGamePanel());
-        frame.setSize(1000, 800);
-        frame.setLocationRelativeTo(null);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setVisible(true);
+public class NervousSystemGame extends JFrame {
+    public NervousSystemGame() {
+        setTitle("신경계 미니게임");
+        setContentPane(new NervousGamePanel(this));
+        setSize(1073, 768);
+        setLocationRelativeTo(null);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        setVisible(true);
     }
 }
 
 class NervousGamePanel extends JPanel {
     private final String[] imagePaths = {
-        "/img/nose_icon_on_background 2.png",
-        "/img/ear_icon_on_background 3.png",
-        "/img/lips_icon_on_background 7.png",
-        "/img/eye_icon_visible 5.png"
+        "\\img\\nose_icon_on_background2.png",
+        "\\img\\ear_icon_on_background3.png",
+        "\\img\\lips_icon_on_background7.png",
+        "\\img\\eye_icon_visible5.png"
     };
 
     private final List<CardButton> cardButtons = new ArrayList<>();
@@ -33,13 +33,15 @@ class NervousGamePanel extends JPanel {
     private int elapsedTime = 0;
     private final int totalTime = 10000;
     private Timer gaugeTimer;
+    private final JFrame parentFrame;
 
-    public NervousGamePanel() {
+    public NervousGamePanel(JFrame parent) {
+        this.parentFrame = parent;
         setLayout(null);
         setFocusable(true);
 
         try {
-            backgroundImage = new ImageIcon(getClass().getResource("/img/FrameN.png")).getImage();
+            backgroundImage = new ImageIcon(getClass().getResource("\\img\\FrameN.png")).getImage();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -83,7 +85,8 @@ class NervousGamePanel extends JPanel {
             boolean allMatched = cardButtons.stream().allMatch(CardButton::isMatched);
             if (!allMatched) {
                 JOptionPane.showMessageDialog(null, "⏰ Time's Up!", "실패", JOptionPane.ERROR_MESSAGE);
-                System.exit(0);
+                SwingUtilities.getWindowAncestor(this).dispose();
+
             }
         });
         gameTimer.setRepeats(false);
@@ -138,7 +141,8 @@ class NervousGamePanel extends JPanel {
                         firstSelected.setMatched(true);
                         if (cardButtons.stream().allMatch(CardButton::isMatched)) {
                             JOptionPane.showMessageDialog(null, "✅ Game Clear!", "성공", JOptionPane.INFORMATION_MESSAGE);
-                            System.exit(0);
+                            SwingUtilities.getWindowAncestor(card).dispose();
+
                         }
                     } else {
                         card.hideImage();
@@ -167,7 +171,7 @@ class CardButton extends JButton {
         this.imagePath = imagePath;
         this.front = new ImageIcon(new ImageIcon(getClass().getResource(imagePath))
                 .getImage().getScaledInstance(width, height, Image.SCALE_SMOOTH));
-        this.back = new ImageIcon(new ImageIcon(getClass().getResource("/img/Rectangle632.png"))
+        this.back = new ImageIcon(new ImageIcon(getClass().getResource("\\img\\Rectangle632.png"))
                 .getImage().getScaledInstance(width, height, Image.SCALE_SMOOTH));
         setIcon(front);
         setBorderPainted(false);
