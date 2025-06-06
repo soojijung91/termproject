@@ -193,18 +193,17 @@ public class KMHM_MainUI extends JFrame {
     }
 
     private JButton createMiniGameButton(String imageFileName, Runnable onClickAction, int x, int y) {
-        ImageIcon icon = new ImageIcon(imageFileName);
+        ImageIcon icon = new ImageIcon(getClass().getResource("/" + imageFileName));
         JButton button = new JButton(icon);
         button.setBounds(x, y, 110, 120);
         button.setContentAreaFilled(false);
         button.setBorderPainted(false);
         button.setFocusPainted(false);
         button.addActionListener(e -> onClickAction.run());
-
-        add(button);
-
+        add(button); // ← 버튼을 현재 컨테이너에 추가
         return button;
     }
+
 
     private int[] clickCounts = new int[4];
     private int[] triggerClicks = new int[4];
