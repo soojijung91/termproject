@@ -389,7 +389,7 @@ public class KMHM_MainUI extends JFrame {
         // 타이머 스레드 종료
         running = false;
         dispose();
-        System.exit(0);
+        new GameOverFrame("Game Over");
     }
 
     private void resizeComponents() {

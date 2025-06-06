@@ -50,7 +50,7 @@ public class GameOverFrame extends JFrame {
         // ✅ 버튼 기능
         restartButton.addActionListener(e -> {
             dispose();
-            new KMHM_MainUI(); // 다시 실행
+            new StartCode(); // 다시 실행
         });
 
         exitButton.addActionListener(e -> System.exit(0));
