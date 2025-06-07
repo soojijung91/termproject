@@ -13,7 +13,6 @@ public class KMHM_MainUI extends JFrame {
         showPatientInfo(name, age, gender, height, weight); // 정보 표시
     }
 
-
     // --- UI 변수들
     private JLabel background, human, scanning, gameTimer, groupWave, rightComponents, stopBtn;
     private JLabel lungImg, brainImg, digestiveImg;
@@ -32,8 +31,6 @@ public class KMHM_MainUI extends JFrame {
     private Rectangle lungArea, brainArea, digArea;
     private Image bgImg, humanImg, scanningImg, timerImg, groupImg, rightImg, stopImg;
     private Image lungRaw, brainRaw, digestiveRaw, pulseRateImg, pulseGroupImg;
-
-    private GraphPanel ecgPanel;
 
     // 설문 및 피드백 저장용 변수들
     private int[] userTotalScores = new int[4];
@@ -146,10 +143,6 @@ public class KMHM_MainUI extends JFrame {
         });
         clockThread.start();
 
-        // --- ECG 그래프 패널 추가
-        ecgPanel = new GraphPanel();
-        add(ecgPanel);
-
         add(scanning);
         add(gameTimer);
         add(groupWave);
@@ -203,7 +196,6 @@ public class KMHM_MainUI extends JFrame {
         add(button); // ← 버튼을 현재 컨테이너에 추가
         return button;
     }
-
 
     private int[] clickCounts = new int[4];
     private int[] triggerClicks = new int[4];
@@ -499,6 +491,7 @@ public class KMHM_MainUI extends JFrame {
     public static void main(String[] args) {
         new KMHM_MainUI();
     }
+
     // 🔻 오른쪽 하단에 환자 정보 출력
     private void showPatientInfo(String name, String age, String gender, String height, String weight) {
         JLabel infoLabel = new JLabel();
@@ -518,11 +511,9 @@ public class KMHM_MainUI extends JFrame {
 
         // 🔻 기존 컴포넌트보다 위에 표시되도록 가장 나중에 add
         this.getContentPane().add(infoLabel);
-        this.getContentPane().setComponentZOrder(infoLabel, 0);  // z-index 조정 (가장 위로)
+        this.getContentPane().setComponentZOrder(infoLabel, 0); // z-index 조정 (가장 위로)
 
         repaint();
     }
-
-
 
 }
