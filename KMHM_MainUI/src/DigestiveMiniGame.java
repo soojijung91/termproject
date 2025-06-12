@@ -170,4 +170,9 @@ public class DigestiveMiniGame extends JFrame {
             g.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), this);
         }
     }
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(() -> new DigestiveMiniGame());
+    }
+
 }
+// 클래스 끝부분에 추가

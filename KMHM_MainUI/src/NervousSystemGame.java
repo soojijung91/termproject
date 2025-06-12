@@ -204,4 +204,8 @@ class CardButton extends JButton {
     public String getImagePath() {
         return imagePath;
     }
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(() -> new NervousSystemGame());
+    }
 }
+
