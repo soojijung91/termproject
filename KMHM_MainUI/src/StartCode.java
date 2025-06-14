@@ -38,7 +38,7 @@ public class StartCode extends JFrame {
         background.add(startButton);
         background.add(howToButton);
 
-        // ✅ 사용자 정보 입력 및 KMHM_MainUI로 전달
+        // 사용자 정보 입력 및 KMHM_MainUI로 전달
         startButton.addActionListener(e -> {
             JTextField nameField = new JTextField();
             JTextField ageField = new JTextField();
@@ -82,7 +82,7 @@ public class StartCode extends JFrame {
 
                 dispose();
 
-                // ✅ 환자 정보를 전달하는 생성자 사용
+                // 환자 정보를 전달하는 생성자 사용
                 KMHM_MainUI game = new KMHM_MainUI(name, age, gender, height, weight);
                 game.setSize(getSize());
                 game.setLocationRelativeTo(null);
