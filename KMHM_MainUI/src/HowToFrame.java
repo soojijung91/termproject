@@ -12,41 +12,41 @@ public class HowToFrame extends JFrame {
 
     public HowToFrame() {
         setTitle("HEALTH CARE SIMULATION 안내");
-        setSize(1073, 768); // StartCode와 동일한 크기
+        setSize(1073, 768);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLayout(null);
         setResizable(false);
 
-        // 이미지 원본 로드
+       
         rawPage1 = new ImageIcon(getClass().getResource("/img/HowToFrame01.png"));
         rawPage2 = new ImageIcon(getClass().getResource("/img/HowToFrame02.png"));
 
-        // 버튼 이미지 로드
+        
         nextIcon = new ImageIcon(getClass().getResource("/img/NEXT.png"));
         backIcon = new ImageIcon(getClass().getResource("/img/BACK.png"));
         cancelIcon = new ImageIcon(getClass().getResource("/img/CANCEL.png"));
 
-        // 이미지 라벨 생성
+        
         imageLabel = new JLabel();
         imageLabel.setBounds(0, 0, getWidth(), getHeight());
         imageLabel.setIcon(resizeImage(rawPage1));
         imageLabel.setLayout(null);
         add(imageLabel);
 
-        // 버튼 생성 (비율 70%)
+        
         nextBtn = createButton(nextIcon, 0.6);
         backBtn = createButton(backIcon, 0.6);
         cancelBtn = createButton(cancelIcon, 0.6);
 
-        // 버튼 위치 조정 (하단 고정)
+        
         positionButtons(true);
 
-        // 첫 페이지 버튼 추가
+        
         imageLabel.add(nextBtn);
         imageLabel.add(cancelBtn);
 
-        // 동작 설정
+       
         nextBtn.addActionListener(e -> showSecondPage());
         backBtn.addActionListener(e -> showFirstPage());
         cancelBtn.addActionListener(e -> dispose());
