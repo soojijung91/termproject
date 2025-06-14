@@ -74,7 +74,7 @@ class GamePanel extends JPanel implements ActionListener, KeyListener {
     @Override
     public void addNotify() {
         super.addNotify();
-        updateLayout(); // 초기 위치 설정
+        updateLayout();
     }
 
     private void updateLayout() {
@@ -84,13 +84,13 @@ class GamePanel extends JPanel implements ActionListener, KeyListener {
         moveZoneWidth = (int) (GAUGE_WIDTH * MOVE_ZONE_SCALE);
         gaugeY = height - 100;
 
-        // 창 너비에 비례한 하트 크기 설정
+        
         playerWidth = Math.max(30, width / 27);  // 1080 / 27 ≈ 40
         playerHeight = playerWidth;
 
         playerY = gaugeY - playerHeight - 30;
 
-        // 초기 중앙 위치 설정 또는 화면 크기에 따라 보정
+        
         if (playerX == 0) {
             playerX = width / 2 - playerWidth / 2;
         } else {
@@ -138,10 +138,10 @@ class GamePanel extends JPanel implements ActionListener, KeyListener {
         super.paintComponent(g);
         int centerX = getWidth() / 2;
 
-        // 배경
+        
         g.drawImage(background, 0, 0, getWidth(), getHeight(), this);
 
-        // 시간 게이지
+        
         int gaugeX = centerX - GAUGE_WIDTH / 2;
         g.setColor(Color.DARK_GRAY);
         g.fillRect(gaugeX, gaugeY, GAUGE_WIDTH, GAUGE_HEIGHT);
@@ -154,16 +154,16 @@ class GamePanel extends JPanel implements ActionListener, KeyListener {
         g.setFont(new Font("맑은 고딕", Font.BOLD, 14));
         g.drawString("Time Left: " + timeLeft + "s", gaugeX, gaugeY + GAUGE_HEIGHT + 16);
 
-        // 이동 레일
+
         int moveZoneX = centerX - moveZoneWidth / 2;
         int guideBarY = playerY + playerHeight + 5;
         g.setColor(new Color(100, 100, 100, 120));
         g.fillRoundRect(moveZoneX, guideBarY, moveZoneWidth, 8, 10, 10);
 
-        // 하트
+        
         g.drawImage(heartImage, playerX, playerY, playerWidth, playerHeight, this);
 
-        // 장애물
+        
         for (Obstacle obs : obstacles) {
             g.drawImage(obs.image, obs.x, obs.y, 40, 40, this);
         }
