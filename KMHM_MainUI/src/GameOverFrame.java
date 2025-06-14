@@ -12,20 +12,20 @@ public class GameOverFrame extends JFrame {
         setLayout(null);
         setResizable(true);
 
-        // ✅ 배경 이미지 패널
+        
         BackgroundPanel background = new BackgroundPanel("/img/GameOverImg.png");
         background.setBounds(0, 0, getWidth(), getHeight());
         background.setLayout(null);
         add(background);
 
-        // ✅ 결과 라벨
+       
         JLabel resultLabel = new JLabel("Time: " + timeResult, SwingConstants.CENTER);
         resultLabel.setFont(new Font("맑은 고딕", Font.BOLD, 50));
         resultLabel.setForeground(Color.WHITE);
         resultLabel.setBounds(400, 200, 640, 80);
         background.add(resultLabel);
 
-        // ✅ 버튼 이미지 로드
+       
         ImageIcon rawRestart = new ImageIcon(getClass().getResource("/img/RestartButton.png"));
         ImageIcon rawExit = new ImageIcon(getClass().getResource("/img/ExitButton.png"));
 
@@ -47,15 +47,15 @@ public class GameOverFrame extends JFrame {
         background.add(restartButton);
         background.add(exitButton);
 
-        // ✅ 버튼 기능
+        
         restartButton.addActionListener(e -> {
             dispose();
-            new StartCode(); // 다시 실행
+            new StartCode();
         });
 
         exitButton.addActionListener(e -> System.exit(0));
 
-        // 리사이징 대응
+        
         addComponentListener(new ComponentAdapter() {
             public void componentResized(ComponentEvent e) {
                 background.setBounds(0, 0, getWidth(), getHeight());
@@ -78,7 +78,7 @@ public class GameOverFrame extends JFrame {
     class BackgroundPanel extends JPanel {
         private Image backgroundImage;
 
-        // ✅ 여기 이거 추가!!
+       
         public BackgroundPanel(String path) {
             backgroundImage = new ImageIcon(getClass().getResource(path)).getImage();
         }
