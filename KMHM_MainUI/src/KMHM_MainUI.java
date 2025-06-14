@@ -7,13 +7,13 @@ import java.util.*;
 import javax.swing.*;
 
 public class KMHM_MainUI extends JFrame {
-    // 🔻 사용자 정보 생성자 추가
+    //사용자 정보 생성자 추가
     public KMHM_MainUI(String name, String age, String gender, String height, String weight) {
         this(); // 기존 기본 생성자 호출
         showPatientInfo(name, age, gender, height, weight); // 정보 표시
     }
 
-    // --- UI 변수들
+    
     private JLabel background, human, scanning, gameTimer, groupWave, rightComponents, stopBtn;
     private JLabel lungImg, brainImg, digestiveImg;
     private JLabel pulseRateLabel, pulseGroupIcon;
@@ -55,7 +55,7 @@ public class KMHM_MainUI extends JFrame {
         btnDigestive = createMiniGameButton("img/DigestiveMG.png", () -> new DigestiveMiniGame(), 20, 540);
         btnCirculatory = createMiniGameButton("img/CirculatoryMG.png", () -> new CirculatoryGame(), 150, 540);
 
-        // --- 이미지 및 컴포넌트 생성
+        
 
         bgImg = new ImageIcon(getClass().getResource("/img/UIBackground.png")).getImage();
         humanImg = new ImageIcon(getClass().getResource("/img/3DIllustration.png")).getImage();
@@ -83,7 +83,7 @@ public class KMHM_MainUI extends JFrame {
         pulseRateLabel = new JLabel();
         pulseGroupIcon = new JLabel();
 
-        // centerClockLabel 세팅
+        
         centerClockLabel = new JLabel("00:00", SwingConstants.CENTER);
         centerClockLabel.setForeground(Color.GREEN);
         centerClockLabel.setOpaque(false);
@@ -127,7 +127,7 @@ public class KMHM_MainUI extends JFrame {
 
         }
 
-        // --- centerClock 타이머 (스레드) 시작
+        //centerClock 타이머 (스레드) 시작
         clockThread = new Thread(() -> {
             while (running) {
                 try {
@@ -154,7 +154,7 @@ public class KMHM_MainUI extends JFrame {
         add(human);
         add(background);
 
-        // --- stopBtn 클릭 시 요약+종료
+        //stopBtn 클릭 시 요약+종료
         stopBtn.addMouseListener(new MouseAdapter() {
             public void mouseClicked(MouseEvent e) {
                 showSummaryAndExit();
@@ -193,7 +193,7 @@ public class KMHM_MainUI extends JFrame {
         button.setBorderPainted(false);
         button.setFocusPainted(false);
         button.addActionListener(e -> onClickAction.run());
-        add(button); // ← 버튼을 현재 컨테이너에 추가
+        add(button);
         return button;
     }
 
@@ -214,7 +214,7 @@ public class KMHM_MainUI extends JFrame {
         JOptionPane.showMessageDialog(this, feedbackMsg, systemNames[index] + " 피드백", JOptionPane.INFORMATION_MESSAGE);
     }
 
-    // --- 설문 조사(모든 저장)
+    // 설문 조사(모든 저장)
     @SuppressWarnings("unchecked")
     private void increase(int index) {
         String[][] missionRecommends = {
@@ -357,7 +357,7 @@ public class KMHM_MainUI extends JFrame {
         checkGameStatus();
     }
 
-    // --- 요약+종료
+    //요약+종료
     private void showSummaryAndExit() {
         StringBuilder sb = new StringBuilder();
         sb.append("====== 내 건강 설문 요약 ======\n\n");
@@ -492,7 +492,7 @@ public class KMHM_MainUI extends JFrame {
         new KMHM_MainUI();
     }
 
-    // 🔻 오른쪽 하단에 환자 정보 출력
+    //오른쪽 하단에 환자 정보 출력
     private void showPatientInfo(String name, String age, String gender, String height, String weight) {
         JLabel infoLabel = new JLabel();
         infoLabel.setBounds(880, 420, 240, 160); // 오른쪽 하단 위치
@@ -509,9 +509,9 @@ public class KMHM_MainUI extends JFrame {
                 + "</div></html>";
         infoLabel.setText(infoText);
 
-        // 🔻 기존 컴포넌트보다 위에 표시되도록 가장 나중에 add
+
         this.getContentPane().add(infoLabel);
-        this.getContentPane().setComponentZOrder(infoLabel, 0); // z-index 조정 (가장 위로)
+        this.getContentPane().setComponentZOrder(infoLabel, 0); 
 
         repaint();
     }
